@@ -33,6 +33,5 @@ public class Test {
         FormatAst fa = new FormatAst(union, "Union");
         
         System.out.println(fa);
-        System.out.println("test1");
    	}
 }
