@@ -8,28 +8,27 @@ import java.util.Set;
 import org.antlr.v4.runtime.misc.Pair;
 
 import ast.Ast.Union;
+import ast.Ast.Variant;
 
 public class FormatAst {
 	private Formatter fmt;
 	
 	public FormatAst(Union union, String className) {
 		fmt = new Formatter();
-		fmt.format("public class %s {\n%s%s\n}", className, formatName(union.name), formatVariants(union.name, union.variants, union.args));
+		fmt.format("public class %s {\n%s%s\n}", className, formatUnion(union.name), formatVariants(union.name, union.variants));
 	}
 	
-	private String formatName(String name) {
+	private String formatUnion(String name) {
 		Formatter f = new Formatter();
 		f.format("\tpublic static abstract class %s { }\n", name);
 		return f.toString();
 	}
 
-	private String formatVariants(String name, List<String> variants, List<List<Pair<String, String>>> args) {
+	private String formatVariants(String union_name, Set<Variant> variants) {
 		Formatter f = new Formatter();
-		int i = 0;
-		for (String variant : variants) {
+		for (Variant variant : variants) {
 			f.format("\tpublic static final class %s extends %s {\n%s\n\t\tpublic %s(%s) {\n%s}\n\t}\n",
-					variant, name, declearArgs(args.get(i)), variant, parenArgs(args.get(i)), setArgs(args.get(i)));
-		i++;
+					variant.name, union_name, declearArgs(variant.args), variant.name, parenArgs(variant.args), setArgs(variant.args));
 		}
 		return f.toString();
 	}

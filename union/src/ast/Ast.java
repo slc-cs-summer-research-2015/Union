@@ -13,15 +13,26 @@ public abstract class Ast {
 
 	public static final class Union {
 		public String name;
-		public List<String> variants;
-		public List<List<Pair<String, String>>> args;
-
+		public Set<Variant> variants;
 		
-		public Union(String name, List<String> variants, List<List<Pair<String, String>>> args) {
+		public Union(String name, Set<Variant> variants) {
 			this.name = name;
 			this.variants = variants;
-			this.args= args;
 		}
-		
 	}
+
+	public static final class Variant implements Comparable<Variant> {
+		public String name;
+		public List<Pair<String, String>> args;
+	
+		public Variant(String name, List<Pair<String, String>> args) {
+			this.name = name;
+			this.args = args;
+		}
+
+		public int compareTo(Variant v) {
+			return this.name.compareToIgnoreCase(v.name);
+		}
+	}
+	
 }
