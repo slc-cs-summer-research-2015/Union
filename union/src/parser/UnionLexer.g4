@@ -12,13 +12,14 @@ RPAREN : ')' ;
 LBRACE : '{' ;
 RBRACE : '}' ;
 
+COMMA : ',';
+
 // operators
 OR : '|';
 
 // reserved words 
 UNION : 'union';
 
-	
 
 // identifiers
 ID : LETTER ID_CHAR* ;

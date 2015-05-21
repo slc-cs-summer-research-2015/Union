@@ -1,4 +1,4 @@
-/ast/
+/parser/
 /buildast/
 /main/
-/parser/
+/ast/

@@ -11,10 +11,17 @@ options {
 }
 
 
-program : union_type;
+program : union_name;
 
-union_type
-	: UNION ID LBRACE union_instance (OR union_instance)* RBRACE;
+union_name
+	: UNION ID LBRACE union_variant (OR union_variant)* RBRACE;
 
-union_instance
-	: ID LPAREN RPAREN;
+union_variant
+	: ID LPAREN union_args? RPAREN;
+	
+union_args
+	: union_arg (COMMA union_arg)*;
+	
+union_arg
+	: ID ID;
+
