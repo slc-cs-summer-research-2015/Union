@@ -10,10 +10,10 @@ import org.antlr.v4.runtime.misc.Pair;
 import ast.Ast.Union;
 import ast.Ast.Variant;
 
-public class FormatAst {
+public class FormatUnion {
 	private Formatter fmt;
 	
-	public FormatAst(Union union, String className) {
+	public FormatUnion(Union union, String className) {
 		fmt = new Formatter();
 		fmt.format("public class %s {\n%s%s\n}", className, formatUnion(union.name), formatVariants(union.name, union.variants));
 	}

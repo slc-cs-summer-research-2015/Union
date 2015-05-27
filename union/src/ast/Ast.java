@@ -19,6 +19,14 @@ public abstract class Ast {
 			this.name = name;
 			this.variants = variants;
 		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public Set<Variant> getVariants() {
+			return variants;
+		}
 	}
 
 	public static final class Variant implements Comparable<Variant> {
@@ -32,6 +40,14 @@ public abstract class Ast {
 
 		public int compareTo(Variant v) {
 			return this.name.compareToIgnoreCase(v.name);
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public List<Pair<String, String>> getArgs() {
+			return args;
 		}
 	}
 	

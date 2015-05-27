@@ -30,7 +30,7 @@ public class Test {
         
         Union union = BuildAst.buildAst(programParseTree);
         
-        FormatAst fa = new FormatAst(union, "Union");
+        FormatUnion fa = new FormatUnion(union, "Union");
         
         System.out.println(fa);
    	}
