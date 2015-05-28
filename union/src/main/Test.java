@@ -14,9 +14,10 @@ import parser.UnionLexer;
 import parser.UnionParser;
 import parser.UnionPrettyPrinter;
 import parser.UnionParser.ProgramContext;
+import ast.*;
 import ast.Ast.Union;
-import buildast.*;
 import main.*;
+import format.*;
 
 public class Test {
 	public static void main(String[] args) throws IOException {
@@ -30,8 +31,10 @@ public class Test {
         
         Union union = BuildAst.buildAst(programParseTree);
         
-        FormatUnion fa = new FormatUnion(union, "Union");
+        //FormatUnionClass f = new FormatUnionClass(union, "Union");
         
-        System.out.println(fa);
+        FormatUnionVariants f = new FormatUnionVariants(union);
+        
+        System.out.println(f);
    	}
 }

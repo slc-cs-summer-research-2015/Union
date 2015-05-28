@@ -1,4 +1,4 @@
-package main;
+package format;
 
 import java.util.Formatter;
 import java.util.List;
@@ -10,10 +10,10 @@ import org.antlr.v4.runtime.misc.Pair;
 import ast.Ast.Union;
 import ast.Ast.Variant;
 
-public class FormatUnion {
+public class FormatUnionClass {
 	private Formatter fmt;
 	
-	public FormatUnion(Union union, String className) {
+	public FormatUnionClass(Union union, String className) {
 		fmt = new Formatter();
 		fmt.format("public class %s {\n%s%s\n}", className, formatUnion(union.name), formatVariants(union.name, union.variants));
 	}

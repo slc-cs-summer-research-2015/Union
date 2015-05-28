@@ -12,7 +12,7 @@ import parser.UnionLexer;
 import parser.UnionParser;
 import parser.UnionParser.ProgramContext;
 import ast.Ast.Union;
-import buildast.BuildAst;
+import ast.BuildAst;
 
 public class ConvertUnion {
 
