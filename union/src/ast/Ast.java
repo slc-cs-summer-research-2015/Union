@@ -27,6 +27,10 @@ public abstract class Ast {
 		public Set<Variant> getVariants() {
 			return variants;
 		}
+		
+		public String toString() {
+			return name;
+		}
 	}
 
 	public static final class Variant implements Comparable<Variant> {

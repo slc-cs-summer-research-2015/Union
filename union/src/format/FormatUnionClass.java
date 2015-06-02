@@ -27,8 +27,16 @@ public class FormatUnionClass {
 	private String formatVariants(String union_name, Set<Variant> variants) {
 		Formatter f = new Formatter();
 		for (Variant variant : variants) {
-			f.format("\tpublic static final class %s extends %s {\n%s\n\t\tpublic %s(%s) {\n%s}\n\t}\n",
-					variant.name, union_name, declearArgs(variant.args), variant.name, parenArgs(variant.args), setArgs(variant.args));
+			if (variant.args != null) {
+				f.format(
+						"\tpublic static final class %s extends %s {\n%s\n\t\tpublic %s(%s) {\n%s}\n\t}\n",
+						variant.name, union_name, declearArgs(variant.args), variant.name, 
+						parenArgs(variant.args), setArgs(variant.args));
+			} else {
+				f.format(
+						"\tpublic static final class %s extends %s {\n\t\tpublic %s() { }\n\t}\n",
+						variant.name, union_name, variant.name);
+			}
 		}
 		return f.toString();
 	}

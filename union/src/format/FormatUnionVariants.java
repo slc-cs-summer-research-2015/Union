@@ -32,10 +32,10 @@ public class FormatUnionVariants {
 		for (Variant v : union.variants) {
 			if (i == 0) {
 				f.format("if (%s instanceof %s) {\n\t%s %s = (%s) %s; \n\t // TODO Auto-generated case match pattern\n} ", 
-						arbitraryUnionName, v.getName(), v.getName(), v.getName().toLowerCase(), union.getName(), arbitraryUnionName);
+						arbitraryUnionName, v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), arbitraryUnionName);
 			} else {
 				f.format("else if (%s instanceof %s) {\n\t%s %s = (%s) %s; \n\t // TODO Auto-generated case match pattern\n} ", 
-						arbitraryUnionName, v.getName(), v.getName(), v.getName().toLowerCase(), union.getName(), arbitraryUnionName);
+						arbitraryUnionName, v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), arbitraryUnionName);
 			}
 			i++;
 		}

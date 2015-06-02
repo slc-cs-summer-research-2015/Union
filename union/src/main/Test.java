@@ -31,9 +31,9 @@ public class Test {
         
         Union union = BuildAst.buildAst(programParseTree);
         
-        //FormatUnionClass f = new FormatUnionClass(union, "Union");
+        FormatUnionClass f = new FormatUnionClass(union, "Union");
         
-        FormatUnionVariants f = new FormatUnionVariants(union);
+        //FormatUnionVariants f = new FormatUnionVariants(union);
         
         System.out.println(f);
    	}
