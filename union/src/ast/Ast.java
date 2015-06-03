@@ -2,7 +2,6 @@ package ast;
 
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.Set;
 
 import org.antlr.v4.runtime.misc.Pair;
@@ -12,25 +11,32 @@ import org.antlr.v4.runtime.misc.Pair;
 public abstract class Ast {
 
 	public static final class Union {
-		public String name;
-		public Set<Variant> variants;
+		public Map<String, Set<Variant>> union;
 		
-		public Union(String name, Set<Variant> variants) {
-			this.name = name;
-			this.variants = variants;
+		public Union(Map<String, Set<Variant>> union) {
+			this.union = union;
+		}
+		
+		public Set<String> getNames() {
+			return union.keySet();
+		}
+		
+		public Set<Variant> getVariants(String union_name) {
+			return union.get(union_name);
 		}
 		
 		public String getName() {
+			String name = "";
+			for (String s : union.keySet()) {
+				name += s;
+			}
 			return name;
-		}
-		
-		public Set<Variant> getVariants() {
-			return variants;
 		}
 		
 		public String toString() {
-			return name;
+			return getName();
 		}
+		
 	}
 
 	public static final class Variant implements Comparable<Variant> {

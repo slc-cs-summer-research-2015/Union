@@ -1,5 +1,4 @@
 /parser/
-/main/
-/buildast/
 /ast/
+/main/
 /format/

@@ -11,7 +11,7 @@ options {
 }
 
 
-program : union_name;
+program : union_name+;
 
 union_name
 	: UNION ID LBRACE union_variant (OR union_variant)* RBRACE;
@@ -23,5 +23,9 @@ union_args
 	: union_arg (COMMA union_arg)*;
 	
 union_arg
-	: ID ID;
+	: type_name ID;
+
+type_name
+	: ID | TYPE_NAME;
+	
 

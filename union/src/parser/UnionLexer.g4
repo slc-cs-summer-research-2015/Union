@@ -12,6 +12,12 @@ RPAREN : ')' ;
 LBRACE : '{' ;
 RBRACE : '}' ;
 
+LANGLE : '<' ;
+RANGLE : '>' ;
+
+LBRACKET : '[' ;
+RBRACKET : ']' ;
+
 COMMA : ',';
 
 // operators
@@ -20,9 +26,11 @@ OR : '|';
 // reserved words 
 UNION : 'union';
 
-
 // identifiers
 ID : LETTER ID_CHAR* ;
+
+// type name
+TYPE_NAME : LETTER TYPE_CHAR*;
 
 
 // helper tokens
@@ -30,6 +38,7 @@ fragment NONZERO : [1-9] ;
 fragment DIGIT : [0-9] ;
 fragment LETTER : [a-zA-Z] ;
 fragment ID_CHAR : DIGIT | LETTER | '_' ;
+fragment TYPE_CHAR : DIGIT | LETTER | LANGLE | RANGLE | LBRACKET | RBRACKET | LPAREN | RPAREN;
 fragment END_LINE : '\n' | '\r' | '\n\r' ;
 fragment NON_END_LINE : ~[\n\r] ;
 

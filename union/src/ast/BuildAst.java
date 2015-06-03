@@ -1,11 +1,15 @@
 package ast;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.antlr.v4.runtime.misc.Pair;
+
 import ast.Ast.Union;
 import ast.Ast.Variant;
 import parser.UnionParser.Union_argContext;
@@ -16,17 +20,24 @@ import static parser.UnionParser.*;
 public class BuildAst {
 	
 	public static Union buildAst(ProgramContext programContext) {
-		String union_name = programContext.union_name().ID().getText();
-		Set<Variant> variants = convertVariants(programContext.union_name());
-		return new Union(union_name, variants);
+		Map<String, Set<Variant>> union = new TreeMap<String, Set<Variant>>();
+		for (Union_nameContext unc: programContext.union_name()) {
+			String union_name = unc.ID().getText();
+			Set<Variant> variants = convertVariants(union_name, unc.union_variant());
+			union.put(union_name, variants);
+		}
+		
+		return new Union(union);
 	}
 
-	private static List<Pair<String, String>> convertArgs(Union_variantContext uv, Union_nameContext union_name) {
+	private static List<Pair<String, String>> convertArgs(Union_variantContext uvc) {
 		List<Pair<String, String>> args = new ArrayList<Pair<String, String>>();
-		if (uv.union_args() != null) {
-			for (Union_argContext ua : uv.union_args().union_arg()) {
-				Pair<String, String> arg = new Pair<String, String>(ua.ID()
-						.get(0).getText(), ua.ID().get(1).getText());
+		if (uvc.union_args() != null) {
+			for (Union_argContext uac : uvc.union_args().union_arg()) {
+				String type_name = null;
+				if (uac.type_name().ID() == null) { type_name = uac.type_name().TYPE_NAME().getText(); }
+				else {type_name = uac.type_name().ID().getText(); }
+				Pair<String, String> arg = new Pair<String, String>(type_name, uac.ID().getText());
 				args.add(arg);
 			}
 			return args;
@@ -35,12 +46,12 @@ public class BuildAst {
 		}
 	}
 
-	private static Set<Variant> convertVariants(Union_nameContext union_name) {
+	private static Set<Variant> convertVariants(String union_name, List<Union_variantContext> uvc) {
 		Set<Variant> variants = new TreeSet<Variant>();
-		if (union_name.union_variant() != null) {
-			for (Union_variantContext uv : union_name.union_variant()) {
-				String name = uv.ID().getText();
-				List<Pair<String, String>> args = convertArgs(uv, union_name);
+		if (uvc != null) {
+			for (Union_variantContext uv : uvc) {
+				String name = uv.ID().getText() + union_name;
+				List<Pair<String, String>> args = convertArgs(uv);
 				variants.add(new Variant(name, args));
 			}
 			return variants;

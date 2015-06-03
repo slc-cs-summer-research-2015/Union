@@ -12,21 +12,26 @@ import ast.Ast.Variant;
 
 public class FormatUnionClass {
 	private Formatter fmt;
+	private Union union;
 	
 	public FormatUnionClass(Union union, String className) {
-		fmt = new Formatter();
-		fmt.format("public class %s {\n%s%s\n}", className, formatUnion(union.name), formatVariants(union.name, union.variants));
+		this.union = union;
+		this.fmt = new Formatter();
+		fmt.format("public class %s {\n%s\n}", className, formatUnion());
 	}
 	
-	private String formatUnion(String name) {
+	private String formatUnion() {
 		Formatter f = new Formatter();
-		f.format("\tpublic static abstract class %s { }\n", name);
+		for (String union_name : union.getNames()) {
+			f.format("\tpublic static abstract class %s { }\n", union_name);
+			f.format(formatVariants(union_name));
+		}
 		return f.toString();
 	}
 
-	private String formatVariants(String union_name, Set<Variant> variants) {
+	private String formatVariants(String union_name) {
 		Formatter f = new Formatter();
-		for (Variant variant : variants) {
+		for (Variant variant : union.getVariants(union_name)) {
 			if (variant.args != null) {
 				f.format(
 						"\tpublic static final class %s extends %s {\n%s\n\t\tpublic %s(%s) {\n%s}\n\t}\n",

@@ -10,32 +10,28 @@ import ast.Ast.Variant;
 public class FormatUnionVariants {
 	private Formatter fmt;
 	private Union union;
-	private String arbitraryUnionName;
-	private String arbitraryUnionsName;
 	
 	public FormatUnionVariants(Union union) {
 		this.fmt = new Formatter();
 		this.union = union;
-		this.arbitraryUnionName = union.getName().toLowerCase();
-		this.arbitraryUnionsName = union.getName().toLowerCase()+"s";
 		
-		fmt.format("// TODO Auto-generated union %s stub\n", union.getName());
-//		fmt.format("public void convertVariants(List<%s> %s) {\n\tfor (%s %s : %s) {\n%s\n\t}\n}",
-//				union.getName(), arbitraryUnionsName, union.getName(), arbitraryUnionName, arbitraryUnionsName, formatAllVariants());
-		fmt.format(formatAllVariants());
+		for (String union_name : union.getNames()) {
+			fmt.format("// TODO Auto-generated union %s stub\n", union_name);
+			fmt.format(formatAllVariants(union_name));
+		}
 	}
 
 
-	private String formatAllVariants() {
+	private String formatAllVariants(String union_name) {
 		Formatter f = new Formatter();
 		int i = 0;
-		for (Variant v : union.variants) {
+		for (Variant v : union.getVariants(union_name)) {
 			if (i == 0) {
 				f.format("if (%s instanceof %s) {\n\t%s %s = (%s) %s; \n\t // TODO Auto-generated case match pattern\n} ", 
-						arbitraryUnionName, v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), arbitraryUnionName);
+						union_name.toLowerCase(), v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), union_name.toLowerCase());
 			} else {
 				f.format("else if (%s instanceof %s) {\n\t%s %s = (%s) %s; \n\t // TODO Auto-generated case match pattern\n} ", 
-						arbitraryUnionName, v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), arbitraryUnionName);
+						union_name.toLowerCase(), v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), union_name.toLowerCase());
 			}
 			i++;
 		}
