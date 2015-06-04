@@ -11,18 +11,18 @@ import org.antlr.v4.runtime.Lexer;
 import parser.UnionLexer;
 import parser.UnionParser;
 import parser.UnionParser.ProgramContext;
-import ast.Ast.Union;
+import ast.Ast.Unions;
 import ast.BuildAst;
 
 public class ConvertUnion {
 
-	private Union union;
+	private Unions union;
 
 	public ConvertUnion(InputStream is) throws IOException {
 		this.union = convert(is);
 	}
 
-	private Union convert(InputStream is) throws IOException {
+	private Unions convert(InputStream is) throws IOException {
 		CharStream charStream = new ANTLRInputStream(is);
 		Lexer lexer = new UnionLexer(charStream);
 
@@ -31,12 +31,12 @@ public class ConvertUnion {
 
 		ProgramContext programParseTree = parser.program();
 
-		Union union = BuildAst.buildAst(programParseTree);
+		Unions union = BuildAst.buildAst(programParseTree);
 
 		return union;
 	}
 	
-	public Union getUnion() {
+	public Unions getUnion() {
 		return union;
 	}
 	

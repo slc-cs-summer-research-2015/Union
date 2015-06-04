@@ -38,7 +38,7 @@ fragment NONZERO : [1-9] ;
 fragment DIGIT : [0-9] ;
 fragment LETTER : [a-zA-Z] ;
 fragment ID_CHAR : DIGIT | LETTER | '_' ;
-fragment TYPE_CHAR : DIGIT | LETTER | LANGLE | RANGLE | LBRACKET | RBRACKET | LPAREN | RPAREN;
+fragment TYPE_CHAR : DIGIT | LETTER | LANGLE | RANGLE | LBRACKET | RBRACKET ;
 fragment END_LINE : '\n' | '\r' | '\n\r' ;
 fragment NON_END_LINE : ~[\n\r] ;
 

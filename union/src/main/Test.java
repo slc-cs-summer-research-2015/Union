@@ -15,7 +15,7 @@ import parser.UnionParser;
 import parser.UnionPrettyPrinter;
 import parser.UnionParser.ProgramContext;
 import ast.*;
-import ast.Ast.Union;
+import ast.Ast.Unions;
 import main.*;
 import format.*;
 
@@ -29,11 +29,11 @@ public class Test {
 		
 		ProgramContext programParseTree = parser.program();
         
-        Union union = BuildAst.buildAst(programParseTree);
+        Unions union = BuildAst.buildAst(programParseTree);
         
-        FormatUnionClass f = new FormatUnionClass(union, "Union");
+        //FormatUnionClass f = new FormatUnionClass(union, "Union");
         
-        //FormatUnionVariants f = new FormatUnionVariants(union);
+        FormatUnionVariants f = new FormatUnionVariants(union);
         
         System.out.println(f);
    	}

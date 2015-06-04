@@ -2,19 +2,16 @@ package format;
 
 import java.util.Formatter;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.antlr.v4.runtime.misc.Pair;
 
-import ast.Ast.Union;
+import ast.Ast.Unions;
 import ast.Ast.Variant;
 
 public class FormatUnionClass {
 	private Formatter fmt;
-	private Union union;
+	private Unions union;
 	
-	public FormatUnionClass(Union union, String className) {
+	public FormatUnionClass(Unions union, String className) {
 		this.union = union;
 		this.fmt = new Formatter();
 		fmt.format("public class %s {\n%s\n}", className, formatUnion());

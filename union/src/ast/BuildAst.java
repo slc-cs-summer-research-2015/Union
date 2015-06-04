@@ -1,6 +1,5 @@
 package ast;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -10,7 +9,7 @@ import java.util.TreeSet;
 
 import org.antlr.v4.runtime.misc.Pair;
 
-import ast.Ast.Union;
+import ast.Ast.Unions;
 import ast.Ast.Variant;
 import parser.UnionParser.Union_argContext;
 import parser.UnionParser.Union_nameContext;
@@ -19,15 +18,15 @@ import static parser.UnionParser.*;
 
 public class BuildAst {
 	
-	public static Union buildAst(ProgramContext programContext) {
-		Map<String, Set<Variant>> union = new TreeMap<String, Set<Variant>>();
+	public static Unions buildAst(ProgramContext programContext) {
+		Map<String, Set<Variant>> unions = new TreeMap<String, Set<Variant>>();
 		for (Union_nameContext unc: programContext.union_name()) {
 			String union_name = unc.ID().getText();
 			Set<Variant> variants = convertVariants(union_name, unc.union_variant());
-			union.put(union_name, variants);
+			unions.put(union_name, variants);
 		}
 		
-		return new Union(union);
+		return new Unions(unions);
 	}
 
 	private static List<Pair<String, String>> convertArgs(Union_variantContext uvc) {

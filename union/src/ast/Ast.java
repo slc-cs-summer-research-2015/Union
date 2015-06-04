@@ -10,10 +10,10 @@ import org.antlr.v4.runtime.misc.Pair;
 
 public abstract class Ast {
 
-	public static final class Union {
+	public static final class Unions {
 		public Map<String, Set<Variant>> union;
 		
-		public Union(Map<String, Set<Variant>> union) {
+		public Unions(Map<String, Set<Variant>> union) {
 			this.union = union;
 		}
 		

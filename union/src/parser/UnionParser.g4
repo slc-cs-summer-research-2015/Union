@@ -28,4 +28,3 @@ union_arg
 type_name
 	: ID | TYPE_NAME;
 	
-
