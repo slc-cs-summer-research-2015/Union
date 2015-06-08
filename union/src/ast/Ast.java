@@ -12,8 +12,10 @@ public abstract class Ast {
 
 	public static final class Unions {
 		public Map<String, Set<Variant>> union;
+		public static boolean hasVisitors;
 		
-		public Unions(Map<String, Set<Variant>> union) {
+		public Unions(Map<String, Set<Variant>> union, boolean hasVisitors) {
+			Unions.hasVisitors = hasVisitors;
 			this.union = union;
 		}
 		
@@ -35,6 +37,10 @@ public abstract class Ast {
 		
 		public String toString() {
 			return getName();
+		}
+		
+		public boolean hasVisitors() {
+			return hasVisitors;
 		}
 		
 	}

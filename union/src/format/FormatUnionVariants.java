@@ -21,13 +21,12 @@ public class FormatUnionVariants {
 		}
 	}
 	
-	public FormatUnionVariants(Unions unions, int unionChoice) {
+	public FormatUnionVariants(Unions unions, String union_name) {
 		this.fmt = new Formatter();
 		this.unions = unions;
-		String[] union_names = unions.getNames().toArray(new String[0]);
 
-		fmt.format("// TODO Auto-generated union %s stub\n", union_names[unionChoice]);
-		fmt.format(formatAllVariants(union_names[unionChoice]));
+		fmt.format("// TODO Auto-generated union %s stub\n", union_name);
+		fmt.format(formatAllVariants(union_name));
 
 	}
 

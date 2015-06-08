@@ -25,10 +25,11 @@ OR : '|';
 
 // reserved words 
 UNION : 'union';
+VISITORS : '%visitors' ;
 
 // identifiers
 ID : LETTER ID_CHAR* ;
-
+ 
 // type name
 TYPE_NAME : LETTER TYPE_CHAR*;
 

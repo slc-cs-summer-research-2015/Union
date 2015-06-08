@@ -26,7 +26,7 @@ public class BuildAst {
 			unions.put(union_name, variants);
 		}
 		
-		return new Unions(unions);
+		return new Unions(unions, programContext.VISITORS() != null);
 	}
 
 	private static List<Pair<String, String>> convertArgs(Union_variantContext uvc) {

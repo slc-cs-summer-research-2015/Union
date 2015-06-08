@@ -29,11 +29,15 @@ public class Test {
 		
 		ProgramContext programParseTree = parser.program();
         
-        Unions union = BuildAst.buildAst(programParseTree);
+        Unions unions = BuildAst.buildAst(programParseTree);
         
-        //FormatUnionClass f = new FormatUnionClass(union, "Union");
+        FormatUnionClass f = new FormatUnionClass(unions, "Union");
         
-        FormatUnionVariants f = new FormatUnionVariants(union);
+        //FormatUnionVariants f = new FormatUnionVariants(unions);
+        
+        //FormatVisitorInterface f = new FormatVisitorInterface(unions);
+        
+        //FormatVisitorInterpreter f = new FormatVisitorInterpreter(unions);
         
         System.out.println(f);
    	}

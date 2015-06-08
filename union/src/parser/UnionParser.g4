@@ -11,7 +11,7 @@ options {
 }
 
 
-program : union_name+;
+program : VISITORS? union_name+;
 
 union_name
 	: UNION ID LBRACE union_variant (OR union_variant)* RBRACE;
