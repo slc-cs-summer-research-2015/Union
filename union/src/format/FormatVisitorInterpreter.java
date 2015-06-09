@@ -23,7 +23,7 @@ public class FormatVisitorInterpreter {
 		this.unions = unions;
 
 		fmt.format("// TODO Auto-generated FormatVisitorInterface %s stub\n", union_name);
-		fmt.format("public class %s implements %s {%s}\n", union_name+"Interpreter", union_name+"Visitor", formatVisitor(union_name));
+		fmt.format("public class %s implements %s {\n%s}\n", union_name+"Interpreter", union_name+"Visitor", formatVisitor(union_name));
 
 	}
 	

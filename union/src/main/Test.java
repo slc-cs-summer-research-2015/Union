@@ -32,13 +32,13 @@ public class Test {
         
         Unions unions = BuildAst.buildAst(programParseTree);
         
-       // FormatUnionClass f = new FormatUnionClass(unions, "Union");
+        //FormatUnionClass f = new FormatUnionClass(unions, "Union");
         
-        FormatUnionVariants f = new FormatUnionVariants(unions);
+        //FormatUnionTraversal f = new FormatUnionTraversal(unions);
         
         //FormatVisitorInterface f = new FormatVisitorInterface(unions);
         
-        //FormatVisitorInterpreter f = new FormatVisitorInterpreter(unions);
+        FormatVisitorInterpreter f = new FormatVisitorInterpreter(unions);
         
         System.out.println(f);
 

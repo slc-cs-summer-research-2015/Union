@@ -34,6 +34,15 @@ public abstract class Ast {
 			return traversals;
 		}
 		
+		public Traversal getTraversal(String traversal_name) {
+			for (Traversal t : traversals) {
+				if (t.name.equals(traversal_name)) {
+					return t;
+				}
+			}
+			return null;
+		}
+		
 		public String getName() {
 			String name = "";
 			for (String s : unions.keySet()) {
@@ -89,6 +98,10 @@ public abstract class Ast {
 				arg_types.add(p.a);
 			}
 			this.arg_types = arg_types;
+		}
+		
+		public String toString() {
+			return name;
 		}
 	}
 	

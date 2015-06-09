@@ -22,7 +22,7 @@ public class FormatUnionClass {
 		Formatter f = new Formatter();
 		if (unions.hasVisitors()) {
 			for (String union_name : unions.getNames()) {
-				f.format("\tpublic static abstract class %s {\n\t\tpublic void abstract accept(%sVisitor v);\n\t}\n",
+				f.format("\tpublic static abstract class %s {\n\t\tpublic abstract void accept(%sVisitor v);\n\t}\n",
 						union_name, union_name);
 				f.format(formatVariants(union_name));
 			}

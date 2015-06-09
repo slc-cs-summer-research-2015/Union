@@ -9,11 +9,11 @@ import org.antlr.v4.runtime.misc.Pair;
 import ast.Ast.Traversal;
 import ast.Ast.*;
 
-public class FormatUnionVariants {
+public class FormatUnionTraversal {
 	private Formatter fmt;
 	private Unions unions;
 	
-	public FormatUnionVariants(Unions unions) {
+	public FormatUnionTraversal(Unions unions) {
 		this.fmt = new Formatter();
 		this.unions = unions;
 		
@@ -22,6 +22,16 @@ public class FormatUnionVariants {
 			fmt.format("public class %s {\n%s}\n", className, formatTraversals(t));
 		}
 	}
+	
+	public FormatUnionTraversal(Unions unions, String traversal_name) {
+		this.fmt = new Formatter();
+		this.unions = unions;
+		Traversal t = unions.getTraversal(traversal_name);
+		String className = Character.toUpperCase(t.name.charAt(0)) + t.name.substring(1) + unions.getName();
+		fmt.format("public class %s {\n%s}\n", className, formatTraversals(t));
+
+	}
+	
 	
 	private String formatTraversals(Traversal t) {
 		Formatter f = new Formatter();
@@ -58,14 +68,6 @@ public class FormatUnionVariants {
 		return f.toString();
 	}
 
-	public FormatUnionVariants(Unions unions, String union_name) {
-		this.fmt = new Formatter();
-		this.unions = unions;
-
-		fmt.format("\t\t// TODO Auto-generated union %s stub\n", union_name);
-		fmt.format(formatAllVariants(union_name));
-
-	}
 
 	private String formatAllVariants(String union_name) {
 		Formatter f = new Formatter();
