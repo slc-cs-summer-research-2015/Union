@@ -2,6 +2,7 @@ package main;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -31,14 +32,15 @@ public class Test {
         
         Unions unions = BuildAst.buildAst(programParseTree);
         
-        FormatUnionClass f = new FormatUnionClass(unions, "Union");
+       // FormatUnionClass f = new FormatUnionClass(unions, "Union");
         
-        //FormatUnionVariants f = new FormatUnionVariants(unions);
+        FormatUnionVariants f = new FormatUnionVariants(unions);
         
         //FormatVisitorInterface f = new FormatVisitorInterface(unions);
         
         //FormatVisitorInterpreter f = new FormatVisitorInterpreter(unions);
         
         System.out.println(f);
+
    	}
 }

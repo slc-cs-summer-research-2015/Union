@@ -9,8 +9,11 @@ import java.util.TreeSet;
 
 import org.antlr.v4.runtime.misc.Pair;
 
+import ast.Ast.Traversal;
 import ast.Ast.Unions;
 import ast.Ast.Variant;
+import parser.UnionParser.TraversalContext;
+import parser.UnionParser.TraversalsContext;
 import parser.UnionParser.Union_argContext;
 import parser.UnionParser.Union_nameContext;
 import parser.UnionParser.Union_variantContext;
@@ -25,8 +28,36 @@ public class BuildAst {
 			Set<Variant> variants = convertVariants(union_name, unc.union_variant());
 			unions.put(union_name, variants);
 		}
-		
-		return new Unions(unions, programContext.VISITORS() != null);
+		List<Traversal> traversals = new ArrayList<Traversal>();
+		traversals = convertTraversals(programContext.traversals());
+		return new Unions(programContext.VISITORS() != null, unions, traversals);
+	}
+
+	private static List<Traversal> convertTraversals(TraversalsContext traversalsContext) {
+		List<Traversal> traversals = new ArrayList<Ast.Traversal>();
+		for (TraversalContext t : traversalsContext.traversal()) {
+			String name = t.ID().getText();
+			String return_type = t.type_name().getText();
+			List<Pair<String, String>> args = convertArgs(t);
+			traversals.add(new Traversal(name, return_type, args));
+		}
+		return traversals;
+	}
+
+	private static List<Pair<String, String>> convertArgs(TraversalContext tc) {
+		List<Pair<String, String>> args = new ArrayList<Pair<String, String>>();
+		if (tc.union_args() != null) {
+			for (Union_argContext uac : tc.union_args().union_arg()) {
+				String type_name = null;
+				if (uac.type_name().ID() == null) { type_name = uac.type_name().TYPE_NAME().getText(); }
+				else {type_name = uac.type_name().ID().getText(); }
+				Pair<String, String> arg = new Pair<String, String>(type_name, uac.ID().getText());
+				args.add(arg);
+			}
+			return args;
+		} else {
+			return null;
+		}
 	}
 
 	private static List<Pair<String, String>> convertArgs(Union_variantContext uvc) {

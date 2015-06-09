@@ -24,8 +24,10 @@ COMMA : ',';
 OR : '|';
 
 // reserved words 
-UNION : 'union';
+UNION : '%union';
 VISITORS : '%visitors' ;
+TRAVERSAL : '%traversal' ;
+PROLOGUE : '%prologue' ;
 
 // identifiers
 ID : LETTER ID_CHAR* ;

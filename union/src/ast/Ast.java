@@ -1,5 +1,6 @@
 package ast;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,25 +12,31 @@ import org.antlr.v4.runtime.misc.Pair;
 public abstract class Ast {
 
 	public static final class Unions {
-		public Map<String, Set<Variant>> union;
+		public Map<String, Set<Variant>> unions;
+		public List<Traversal> traversals;
 		public static boolean hasVisitors;
 		
-		public Unions(Map<String, Set<Variant>> union, boolean hasVisitors) {
+		public Unions(boolean hasVisitors, Map<String, Set<Variant>> unions, List<Traversal> traversals) {
 			Unions.hasVisitors = hasVisitors;
-			this.union = union;
+			this.traversals = traversals;
+			this.unions = unions;
 		}
 		
 		public Set<String> getNames() {
-			return union.keySet();
+			return unions.keySet();
 		}
 		
 		public Set<Variant> getVariants(String union_name) {
-			return union.get(union_name);
+			return unions.get(union_name);
+		}
+		
+		public List<Traversal> getTraversals() {
+			return traversals;
 		}
 		
 		public String getName() {
 			String name = "";
-			for (String s : union.keySet()) {
+			for (String s : unions.keySet()) {
 				name += s;
 			}
 			return name;
@@ -64,6 +71,24 @@ public abstract class Ast {
 		
 		public List<Pair<String, String>> getArgs() {
 			return args;
+		}
+	}
+	
+	public static final class Traversal {
+		public String name;
+		public String return_type;
+		public List<String> arg_types;
+		public List<Pair<String, String>> args;
+		
+		public Traversal(String name, String return_type, List<Pair<String, String>> args) {
+			this.name = name;
+			this.return_type = return_type;
+			this.args = args;
+			List<String> arg_types = new ArrayList<String>();
+			for (Pair<String, String> p : args) {
+				arg_types.add(p.a);
+			}
+			this.arg_types = arg_types;
 		}
 	}
 	

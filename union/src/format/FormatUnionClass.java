@@ -10,27 +10,36 @@ import ast.Ast.Variant;
 
 public class FormatUnionClass {
 	private Formatter fmt;
-	private Unions union;
+	private Unions unions;
 	
-	public FormatUnionClass(Unions union, String className) {
-		this.union = union;
+	public FormatUnionClass(Unions unions, String className) {
+		this.unions = unions;
 		this.fmt = new Formatter();
 		fmt.format("public class %s {\n%s\n}", className, formatUnion());
 	}
 	
 	private String formatUnion() {
 		Formatter f = new Formatter();
-		for (String union_name : union.getNames()) {
-			f.format("\tpublic static abstract class %s {\n\t\tpublic void abstract accept(%sVisitor v);\n\t}\n",
-					union_name, union_name);
-			f.format(formatVariants(union_name));
+		if (unions.hasVisitors()) {
+			for (String union_name : unions.getNames()) {
+				f.format("\tpublic static abstract class %s {\n\t\tpublic void abstract accept(%sVisitor v);\n\t}\n",
+						union_name, union_name);
+				f.format(formatVariants(union_name));
+			}
+		} else {
+			for (String union_name : unions.getNames()) {
+				f.format("\tpublic static abstract class %s { }\n", union_name,
+						union_name);
+				f.format(formatVariants(union_name));
+			}
 		}
 		return f.toString();
 	}
 
 	private String formatVariants(String union_name) {
 		Formatter f = new Formatter();
-		for (Variant variant : union.getVariants(union_name)) {
+		if (unions.hasVisitors()) {
+		for (Variant variant : unions.getVariants(union_name)) {
 			if (variant.args != null) {
 				f.format(
 						"\tpublic static final class %s extends %s {\n%s\n\t\tpublic %s(%s) {\n%s\n\t\t}\n%s\n\t}\n",
@@ -40,6 +49,20 @@ public class FormatUnionClass {
 				f.format(
 						"\tpublic static final class %s extends %s {\n\t\tpublic %s() { }\n%s\t}\n",
 						variant.name, union_name, variant.name, setAcceptMethod(union_name));
+			}
+		}
+		} else {
+			for (Variant variant : unions.getVariants(union_name)) {
+				if (variant.args != null) {
+					f.format(
+							"\tpublic static final class %s extends %s {\n%s\n\t\tpublic %s(%s) {\n%s\n\t\t}\n\t}\n",
+							variant.name, union_name, declearArgs(variant.args), variant.name, 
+							parenArgs(variant.args), setArgs(variant.args));
+				} else {
+					f.format(
+							"\tpublic static final class %s extends %s {\n\t\tpublic %s() { }\n\t}\n",
+							variant.name, union_name, variant.name);
+				}
 			}
 		}
 		return f.toString();
