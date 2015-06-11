@@ -9,11 +9,7 @@ public class UnionPrettyPrinter extends UnionParserBaseListener {
 	
 	public UnionPrettyPrinter() {
 		sb = new StringBuilder();
-	}
-	
-	
-	
-	
+	}	
 	
 	public void visitTerminal(TerminalNode tn) {
 		sb.append(' ');

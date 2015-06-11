@@ -12,14 +12,16 @@ import org.antlr.v4.runtime.misc.Pair;
 public abstract class Ast {
 
 	public static final class Unions {
-		public Map<String, Set<Variant>> unions;
-		public List<Traversal> traversals;
+		private Map<String, Set<Variant>> unions;
+		private List<Traversal> traversals;
 		public static boolean hasVisitors;
+		public String importText;
 		
-		public Unions(boolean hasVisitors, Map<String, Set<Variant>> unions, List<Traversal> traversals) {
+		public Unions(String importText, boolean hasVisitors, Map<String, Set<Variant>> unions, List<Traversal> traversals) {
 			Unions.hasVisitors = hasVisitors;
 			this.traversals = traversals;
 			this.unions = unions;
+			this.importText = importText;
 		}
 		
 		public Set<String> getNames() {
@@ -88,16 +90,24 @@ public abstract class Ast {
 		public String return_type;
 		public List<String> arg_types;
 		public List<Pair<String, String>> args;
+		public List<String> arg_names;
 		
 		public Traversal(String name, String return_type, List<Pair<String, String>> args) {
 			this.name = name;
 			this.return_type = return_type;
 			this.args = args;
 			List<String> arg_types = new ArrayList<String>();
+			List<String> arg_names = new ArrayList<String>();
 			for (Pair<String, String> p : args) {
 				arg_types.add(p.a);
+				arg_names.add(p.b);
 			}
 			this.arg_types = arg_types;
+			this.arg_names = arg_names;
+		}
+		
+		public String getParameterName(int arg_index) {
+			return arg_names.get(arg_index);
 		}
 		
 		public String toString() {

@@ -15,6 +15,7 @@ public class FormatUnionClass {
 	public FormatUnionClass(Unions unions, String className) {
 		this.unions = unions;
 		this.fmt = new Formatter();
+		fmt.format(unions.importText);
 		fmt.format("public class %s {\n%s\n}", className, formatUnion());
 	}
 	

@@ -49,21 +49,23 @@ public class FormatUnionTraversal {
 
 	private String formatAllVariantsOfArgs(Traversal t) {
 		Formatter f = new Formatter();
+		int arg_index = 0;
 		for (String arg_type : t.arg_types) {
 			if (unions.getNames().contains(arg_type)) {
 				int i = 0;
 				for (Variant v : unions.getVariants(arg_type)) {
 					if (i == 0) {
 						f.format("\t\tif (%s instanceof %s) {\n\t\t\t%s %s = (%s) %s; \n\t\t\t // TODO Auto-generated case match pattern\n\t\t} ", 
-								arg_type.toLowerCase(), v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), arg_type.toLowerCase());
+								t.getParameterName(arg_index), v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), t.getParameterName(arg_index));
 					} else {
 						f.format("else if (%s instanceof %s) {\n\t\t\t%s %s = (%s) %s; \n\t\t\t // TODO Auto-generated case match pattern\n\t\t} ", 
-								arg_type.toLowerCase(), v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), arg_type.toLowerCase());
+								t.getParameterName(arg_index), v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), t.getParameterName(arg_index));
 					}
 					i++;
 				}
 				f.format("else {\n\t\t\tthrow new RuntimeException(%s);\n\t\t}\n", '"'+"Unexpected variant"+'"');
 			}
+		arg_index++;
 		}
 		return f.toString();
 	}

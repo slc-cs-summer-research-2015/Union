@@ -11,7 +11,9 @@ options {
 }
 
 
-program : VISITORS? union_name+ traversals;
+program : prologue? VISITORS? union_name+ traversals;
+
+prologue : PROLOGUE;
 
 union_name
 	: UNION ID LBRACE union_variant (OR union_variant)* RBRACE;

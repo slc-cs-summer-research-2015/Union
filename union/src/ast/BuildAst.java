@@ -12,6 +12,7 @@ import org.antlr.v4.runtime.misc.Pair;
 import ast.Ast.Traversal;
 import ast.Ast.Unions;
 import ast.Ast.Variant;
+import parser.UnionParser.PrologueContext;
 import parser.UnionParser.TraversalContext;
 import parser.UnionParser.TraversalsContext;
 import parser.UnionParser.Union_argContext;
@@ -22,6 +23,7 @@ import static parser.UnionParser.*;
 public class BuildAst {
 	
 	public static Unions buildAst(ProgramContext programContext) {
+		String importText = convetPrologue(programContext.prologue());
 		Map<String, Set<Variant>> unions = new TreeMap<String, Set<Variant>>();
 		for (Union_nameContext unc: programContext.union_name()) {
 			String union_name = unc.ID().getText();
@@ -30,7 +32,12 @@ public class BuildAst {
 		}
 		List<Traversal> traversals = new ArrayList<Traversal>();
 		traversals = convertTraversals(programContext.traversals());
-		return new Unions(programContext.VISITORS() != null, unions, traversals);
+		return new Unions(importText, programContext.VISITORS() != null, unions, traversals);
+	}
+
+	private static String convetPrologue(PrologueContext prologue) {
+		String p = prologue.getText();
+		return p.substring(9, p.length()-13);
 	}
 
 	private static List<Traversal> convertTraversals(TraversalsContext traversalsContext) {

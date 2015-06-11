@@ -1,6 +1,5 @@
 package main;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +31,13 @@ public class Test {
         
         Unions unions = BuildAst.buildAst(programParseTree);
         
-        //FormatUnionClass f = new FormatUnionClass(unions, "Union");
+        FormatUnionClass f = new FormatUnionClass(unions, "Union");
         
         //FormatUnionTraversal f = new FormatUnionTraversal(unions);
         
         //FormatVisitorInterface f = new FormatVisitorInterface(unions);
         
-        FormatVisitorInterpreter f = new FormatVisitorInterpreter(unions);
+        //FormatVisitorInterpreter f = new FormatVisitorInterpreter(unions);
         
         System.out.println(f);
 
