@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.misc.Pair;
 
 import ast.Ast.Unions;
 import ast.Ast.Variant;
+import ast.Type;
 
 public class FormatUnionClass {
 	private Formatter fmt;
@@ -75,20 +76,20 @@ public class FormatUnionClass {
 		return f.toString();
 	}
 
-	private String setArgs(List<Pair<String, String>> args) {
+	private String setArgs(List<Pair<Type, String>> args) {
 		Formatter f = new Formatter();
-		for (Pair<String, String> arg : args) {
-			String type = arg.a;
+		for (Pair<Type, String> arg : args) {
+			Type type = arg.a;
 			String arg_name = arg.b;
 			f.format("\t\t\tthis.%s = %s;\n", arg_name, arg_name);
 		}
 		return f.toString();
 	}
 	
-	private String parenArgs(List<Pair<String, String>> args) {
+	private String parenArgs(List<Pair<Type, String>> args) {
 		Formatter f = new Formatter();
-		for (Pair<String, String> arg : args) {
-			String type = arg.a;
+		for (Pair<Type, String> arg : args) {
+			Type type = arg.a;
 			String arg_name = arg.b;
 			f.format("%s %s, ", type, arg_name);
 		}
@@ -96,10 +97,10 @@ public class FormatUnionClass {
 		return str.substring(0, str.length()-2);
 	}
 
-	private String declearArgs(List<Pair<String, String>> args) {
+	private String declearArgs(List<Pair<Type, String>> args) {
 		Formatter f = new Formatter();
-		for (Pair<String, String> arg : args) {
-			String type = arg.a;
+		for (Pair<Type, String> arg : args) {
+			Type type = arg.a;
 			String arg_name = arg.b;
 			f.format("\t\tpublic %s %s;\n", type, arg_name);
 		}

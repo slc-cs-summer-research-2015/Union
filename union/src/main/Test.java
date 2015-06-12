@@ -31,9 +31,9 @@ public class Test {
         
         Unions unions = BuildAst.buildAst(programParseTree);
         
-        FormatUnionClass f = new FormatUnionClass(unions, "Union");
+        //FormatUnionClass f = new FormatUnionClass(unions, "Union");
         
-        //FormatUnionTraversal f = new FormatUnionTraversal(unions);
+        FormatUnionInstance f = new FormatUnionInstance(unions);
         
         //FormatVisitorInterface f = new FormatVisitorInterface(unions);
         

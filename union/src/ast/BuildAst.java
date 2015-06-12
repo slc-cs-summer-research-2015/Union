@@ -15,6 +15,7 @@ import ast.Ast.Variant;
 import parser.UnionParser.PrologueContext;
 import parser.UnionParser.TraversalContext;
 import parser.UnionParser.TraversalsContext;
+import parser.UnionParser.Type_nameContext;
 import parser.UnionParser.Union_argContext;
 import parser.UnionParser.Union_nameContext;
 import parser.UnionParser.Union_variantContext;
@@ -44,21 +45,39 @@ public class BuildAst {
 		List<Traversal> traversals = new ArrayList<Ast.Traversal>();
 		for (TraversalContext t : traversalsContext.traversal()) {
 			String name = t.ID().getText();
-			String return_type = t.type_name().getText();
-			List<Pair<String, String>> args = convertArgs(t);
+			Type return_type = convertTypes(t.type_name());
+			List<Pair<Type, String>> args = convertArgs(t);
 			traversals.add(new Traversal(name, return_type, args));
 		}
 		return traversals;
 	}
+	
+	private static Type convertTypes(Type_nameContext type_name) {
+		if (type_name.primitive_type() != null) {
+			if (type_name.primitive_type().BOOLEAN_TYPE() != null) {
+				return Type.BOOLEAN_TYPE;
+			} else {
+				return new Type.NumericType(type_name.primitive_type().NUMERIC_TYPE().getText());
+			}
+		} else {
+			if (type_name.reference_type().type_args() == null) {
+				return new Type.ObjectType(type_name.reference_type().ID().getText(), null);
+			} else {
+				List<Type> argTypes = new ArrayList<Type>();
+				for (Type_argContext type_arg : type_name.reference_type().type_args().type_arg()) {
+					argTypes.add(convertTypes(type_arg.type_name()));
+				}
+				return new Type.ObjectType(type_name.reference_type().ID().getText(), argTypes);
+			}
+		}
+	}
 
-	private static List<Pair<String, String>> convertArgs(TraversalContext tc) {
-		List<Pair<String, String>> args = new ArrayList<Pair<String, String>>();
+	private static List<Pair<Type, String>> convertArgs(TraversalContext tc) {
+		List<Pair<Type, String>> args = new ArrayList<Pair<Type, String>>();
 		if (tc.union_args() != null) {
 			for (Union_argContext uac : tc.union_args().union_arg()) {
-				String type_name = null;
-				if (uac.type_name().ID() == null) { type_name = uac.type_name().TYPE_NAME().getText(); }
-				else {type_name = uac.type_name().ID().getText(); }
-				Pair<String, String> arg = new Pair<String, String>(type_name, uac.ID().getText());
+				Type type = convertTypes(uac.type_name());
+				Pair<Type, String> arg = new Pair<Type, String>(type, uac.ID().getText());
 				args.add(arg);
 			}
 			return args;
@@ -67,20 +86,16 @@ public class BuildAst {
 		}
 	}
 
-	private static List<Pair<String, String>> convertArgs(Union_variantContext uvc) {
-		List<Pair<String, String>> args = new ArrayList<Pair<String, String>>();
+	private static List<Pair<Type, String>> convertArgs(Union_variantContext uvc) {
+		List<Pair<Type, String>> args = new ArrayList<Pair<Type, String>>();
 		if (uvc.union_args() != null) {
 			for (Union_argContext uac : uvc.union_args().union_arg()) {
-				String type_name = null;
-				if (uac.type_name().ID() == null) { type_name = uac.type_name().TYPE_NAME().getText(); }
-				else {type_name = uac.type_name().ID().getText(); }
-				Pair<String, String> arg = new Pair<String, String>(type_name, uac.ID().getText());
+				Type type = convertTypes(uac.type_name());
+				Pair<Type, String> arg = new Pair<Type, String>(type, uac.ID().getText());
 				args.add(arg);
 			}
 			return args;
-		} else {
-			return null;
-		}
+		} else { return null; }
 	}
 
 	private static Set<Variant> convertVariants(String union_name, List<Union_variantContext> uvc) {
@@ -88,7 +103,7 @@ public class BuildAst {
 		if (uvc != null) {
 			for (Union_variantContext uv : uvc) {
 				String name = uv.ID().getText() + union_name;
-				List<Pair<String, String>> args = convertArgs(uv);
+				List<Pair<Type, String>> args = convertArgs(uv);
 				variants.add(new Variant(name, args));
 			}
 			return variants;

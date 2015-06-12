@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.antlr.v4.runtime.misc.Pair;
 
+import ast.Type;
 
 
 public abstract class Ast {
@@ -65,9 +66,9 @@ public abstract class Ast {
 
 	public static final class Variant implements Comparable<Variant> {
 		public String name;
-		public List<Pair<String, String>> args;
+		public List<Pair<Type, String>> args;
 	
-		public Variant(String name, List<Pair<String, String>> args) {
+		public Variant(String name, List<Pair<Type, String>> args) {
 			this.name = name;
 			this.args = args;
 		}
@@ -80,31 +81,32 @@ public abstract class Ast {
 			return name;
 		}
 		
-		public List<Pair<String, String>> getArgs() {
+		public List<Pair<Type, String>> getArgs() {
 			return args;
 		}
 	}
 	
 	public static final class Traversal {
 		public String name;
-		public String return_type;
-		public List<String> arg_types;
-		public List<Pair<String, String>> args;
+		public Type return_type;
+		public List<Type> arg_types;
+		public List<Pair<Type, String>> args;
 		public List<String> arg_names;
 		
-		public Traversal(String name, String return_type, List<Pair<String, String>> args) {
+		public Traversal(String name, Type return_type, List<Pair<Type, String>> args) {
 			this.name = name;
 			this.return_type = return_type;
 			this.args = args;
-			List<String> arg_types = new ArrayList<String>();
+			List<Type> arg_types = new ArrayList<Type>();
 			List<String> arg_names = new ArrayList<String>();
-			for (Pair<String, String> p : args) {
+			for (Pair<Type, String> p : args) {
 				arg_types.add(p.a);
 				arg_names.add(p.b);
 			}
 			this.arg_types = arg_types;
 			this.arg_names = arg_names;
 		}
+		
 		
 		public String getParameterName(int arg_index) {
 			return arg_names.get(arg_index);

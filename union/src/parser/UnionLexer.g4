@@ -27,6 +27,19 @@ STAR: '*';
 // operators
 OR : '|';
 
+// types
+BOOLEAN_TYPE
+	:   'boolean' ;
+NUMERIC_TYPE
+	:   'char'
+    |   'byte'
+    |   'short'
+    |   'int'
+    |   'long'
+    |   'float'
+    |   'double'
+	;
+
 // reserved words 
 UNION : '%union';
 VISITORS : '%visitors' ;
@@ -36,10 +49,6 @@ PROLOGUE_END : '%prologue_end';
 
 // identifiers
 ID : LETTER ID_CHAR* ;
- 
-// type name
-TYPE_NAME : LETTER TYPE_CHAR*;
-
 
 // import text
 PROLOGUE : PROLOGUE_START IMPORT_TEXT? PROLOGUE_END; 
