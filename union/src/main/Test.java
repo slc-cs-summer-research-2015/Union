@@ -33,9 +33,9 @@ public class Test {
         
         //FormatUnionClass f = new FormatUnionClass(unions, "Union");
         
-        FormatUnionInstance f = new FormatUnionInstance(unions);
+        //FormatUnionInstance f = new FormatUnionInstance(unions);
         
-        //FormatVisitorInterface f = new FormatVisitorInterface(unions);
+        FormatVisitorInterface f = new FormatVisitorInterface(unions);
         
         //FormatVisitorInterpreter f = new FormatVisitorInterpreter(unions);
         

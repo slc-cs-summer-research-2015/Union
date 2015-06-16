@@ -1,6 +1,7 @@
 package ast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,6 +45,14 @@ public abstract class Ast {
 				}
 			}
 			return null;
+		}
+		
+		public Set<Type> getReturnTypes() {
+			Set<Type> return_types = new HashSet<Type>();
+			for (Traversal t : traversals) {
+				return_types.add(t.return_type);
+			}
+			return return_types;
 		}
 		
 		public String getName() {
@@ -106,6 +115,7 @@ public abstract class Ast {
 			this.arg_types = arg_types;
 			this.arg_names = arg_names;
 		}
+		
 		
 		
 		public String getParameterName(int arg_index) {

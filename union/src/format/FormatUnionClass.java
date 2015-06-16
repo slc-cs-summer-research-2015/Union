@@ -1,5 +1,6 @@
 package format;
 
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 
@@ -24,8 +25,8 @@ public class FormatUnionClass {
 		Formatter f = new Formatter();
 		if (unions.hasVisitors()) {
 			for (String union_name : unions.getNames()) {
-				f.format("\tpublic static abstract class %s {\n\t\tpublic abstract void accept(%sVisitor v);\n\t}\n",
-						union_name, union_name);
+				f.format("\tpublic static abstract class %s {\n\t\tpublic abstract void accept(%sVisitor v);\n\t}\n", union_name, union_name);
+				//f.format("\tpublic static abstract class %s {\n%s\t}\n", union_name, formatAccept(union_name));
 				f.format(formatVariants(union_name));
 			}
 		} else {
@@ -38,6 +39,18 @@ public class FormatUnionClass {
 		return f.toString();
 	}
 
+//	private String formatAccept(String union_name) {
+//		Formatter f = new Formatter();
+//		List<String> types = new ArrayList<String>();
+//		for (Type t : unions.getReturnTypes()) {
+//			if (!types.contains(t.toString())) {
+//				f.format("\t\tpublic abstract %s accept(%sVisitor v);\n", t, union_name);
+//				types.add(t.toString());
+//			}
+//		}
+//		return f.toString();
+//	}
+
 	private String formatVariants(String union_name) {
 		Formatter f = new Formatter();
 		if (unions.hasVisitors()) {
@@ -46,11 +59,11 @@ public class FormatUnionClass {
 				f.format(
 						"\tpublic static final class %s extends %s {\n%s\n\t\tpublic %s(%s) {\n%s\n\t\t}\n%s\n\t}\n",
 						variant.name, union_name, declearArgs(variant.args), variant.name, 
-						parenArgs(variant.args), setArgs(variant.args), setAcceptMethod(union_name));
+						parenArgs(variant.args), setArgs(variant.args), FormatAcceptMethod(union_name));
 			} else {
 				f.format(
 						"\tpublic static final class %s extends %s {\n\t\tpublic %s() { }\n%s\t}\n",
-						variant.name, union_name, variant.name, setAcceptMethod(union_name));
+						variant.name, union_name, variant.name, FormatAcceptMethod(union_name));
 			}
 		}
 		} else {
@@ -70,7 +83,7 @@ public class FormatUnionClass {
 		return f.toString();
 	}
 	
-	private String setAcceptMethod(String union_name) {
+	private String FormatAcceptMethod(String union_name) {
 		Formatter f = new Formatter();
 		f.format("\t\tpublic void accept(%sVisitor v) {\n\t\t\tv.visit(this);\n\t\t}", union_name);
 		return f.toString();
