@@ -2,6 +2,8 @@ package ast;
 
 import java.util.List;
 
+import ast.Ast.Variant;
+
 public abstract class Type {
 	
 	public static final NullType NULL_TYPE = new NullType();
@@ -64,6 +66,15 @@ public abstract class Type {
 				return id;
 			}
 		}
+	}
+	
+	public int compareTo(Type t) {
+		return this.toString().compareTo(t.toString());
+	}
+	
+	public boolean equals(Type t) {
+		if (this.toString().equals(t.toString())) { return true; }
+		else { return false; }
 	}
 	
 }

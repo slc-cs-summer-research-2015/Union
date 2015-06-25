@@ -14,8 +14,8 @@ import ast.Type;
 public abstract class Ast {
 
 	public static final class Unions {
-		private Map<String, Set<Variant>> unions;
-		private List<Traversal> traversals;
+		public Map<String, Set<Variant>> unions;
+		public List<Traversal> traversals;
 		public static boolean hasVisitors;
 		public String importText;
 		
@@ -71,6 +71,8 @@ public abstract class Ast {
 			return hasVisitors;
 		}
 		
+
+		
 	}
 
 	public static final class Variant implements Comparable<Variant> {
@@ -90,8 +92,23 @@ public abstract class Ast {
 			return name;
 		}
 		
+		public String toString() {
+			return name;
+		}
+		
 		public List<Pair<Type, String>> getArgs() {
 			return args;
+		}
+		
+		public boolean containsArg(Pair<Type, String> Otherarg) {
+			if (this.args != null) {
+				for (Pair<Type, String> arg : this.args) {
+					if (arg.a.equals(Otherarg.a) && arg.b.equals(Otherarg.b)) {
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 	

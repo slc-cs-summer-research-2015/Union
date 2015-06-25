@@ -16,10 +16,10 @@ import ast.BuildAst;
 
 public class ConvertUnion {
 
-	private Unions union;
+	private Unions unions;
 
 	public ConvertUnion(InputStream is) throws IOException {
-		this.union = convert(is);
+		this.unions = convert(is);
 	}
 
 	private Unions convert(InputStream is) throws IOException {
@@ -37,7 +37,7 @@ public class ConvertUnion {
 	}
 	
 	public Unions getUnion() {
-		return union;
+		return unions;
 	}
-	
+
 }
