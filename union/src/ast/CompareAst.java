@@ -9,29 +9,87 @@ import java.util.TreeMap;
 
 import org.antlr.v4.runtime.misc.Pair;
 
+import ast.Ast.Unions;
 import ast.Ast.Variant;
 import ast.Ast.*;
 
 public class CompareAst {
 	
 	public static class CompareUnions {
+		private Unions afterU;
+		private Unions beforeU;
 		public Map<String, CompareVariants> compareVariants_Unions;
 		//...
 		
 		public CompareUnions(Unions afterU, Unions beforeU) {
-			this.compareVariants_Unions = compareVariantsInUnions(afterU, beforeU);
+			this.afterU = afterU;
+			this.beforeU = beforeU;
+			this.compareVariants_Unions = compareVariantsInUnions();
 		}
 
-		private Map<String, CompareVariants> compareVariantsInUnions(Unions afterU, Unions beforeU) {
+		private Map<String, CompareVariants> compareVariantsInUnions() {
 			Map<String, CompareVariants> compareVariants_Unions = new TreeMap<String, CompareVariants>();
 			for (String union_name : afterU.getNames()) {
-				CompareVariants compareVariants = new CompareVariants(
-						afterU.getVariants(union_name), beforeU.getVariants(union_name));
-				compareVariants_Unions.put(union_name, compareVariants);
+				if (beforeU.getVariants(union_name) == null) {
+					// a union is added
+				} else {
+					CompareVariants compareVariants = new CompareVariants(
+							afterU.getVariants(union_name), beforeU.getVariants(union_name));
+					compareVariants_Unions.put(union_name, compareVariants);
+				}
 			}
 			return compareVariants_Unions;
 		}
 		
+		public List<Variant> getTraversalInstaces(Traversal t, int mode) {
+			final int insert = 0;
+			final int delete = 1;
+			List<Variant> traversalInstaces = new ArrayList<Variant>();
+
+			for (Type union_type : t.getArg_types()) {
+				// pick the argument types that are union types
+				if (afterU.getNames().contains(union_type.toString())) {
+					// found additional union types
+					if (!beforeU.getNames().contains(union_type.toString())) {
+						// add this additional union with all the corresponding variants, but what if it's only renamed?
+					} else {
+						CompareVariants compareVariants = new CompareVariants(
+								afterU.getVariants(union_type.toString()),
+								beforeU.getVariants(union_type.toString()));
+						if (mode == insert) {
+							traversalInstaces = compareVariants.getInsertions();
+						} else if (mode == delete) {
+							traversalInstaces = compareVariants.getDeletions();
+						}
+					}
+				}
+			}
+			return traversalInstaces;
+		}
+		
+		public String getTraversalModifyMessage(Traversal t) {
+			StringBuilder message = new StringBuilder();
+
+			for (Type union_type : t.getArg_types()) {
+				// pick the argument types that are union types
+				if (afterU.getNames().contains(union_type.toString())) {
+					// found additional union types
+					if (!beforeU.getNames().contains(union_type.toString())) {
+						// add this additional union with all the corresponding variants, but what if it's only renamed?
+					} else {
+						CompareVariants compareVariants = new CompareVariants(
+								afterU.getVariants(union_type.toString()),
+								beforeU.getVariants(union_type.toString()));
+						for (Variant v : compareVariants.getPresent()) {
+							if (compareVariants.isVariantModified(v)) {
+								message.append(compareVariants.printoutModifyMessage(v));
+							}
+						}
+					}
+				}
+			}
+			return message.toString();
+		}
 	}
 
 	
@@ -50,7 +108,7 @@ public class CompareAst {
 		}
 		
 		
-		public void compareVariants(Set<Variant> afterVs, Set<Variant> beforeVs) {
+		private void compareVariants(Set<Variant> afterVs, Set<Variant> beforeVs) {
 			for (Variant afterV : afterVs) {
 				if (beforeVs.contains(afterV)) {
 					System.out.printf("Variant %s was present in the previous edit\n", afterV.getName());
@@ -116,15 +174,15 @@ public class CompareAst {
 			if (isVariantModified(v)) {
 				CompareArgs compareArgs = compareArgs_Variants.get(v);
 				if (compareArgs.insertions != null) {
-					f.format("Argument %s was added in variant %s\n",
+					f.format("//Argument %s was added in variant %s\n",
 							compareArgs.insertions.toString(), v.getName());
 				}
 				if (compareArgs.deletions != null) {
-					f.format("Argument %s was removed in variant %s\n",
+					f.format("//Argument %s was removed in variant %s\n",
 							compareArgs.deletions.toString(), v.getName());
 				}
 			} else {
-				f.format("Variant %s has not been modified\n", v.getName());
+				f.format("//Variant %s has not been modified\n", v.getName());
 			}
 			return f.toString();
 		}

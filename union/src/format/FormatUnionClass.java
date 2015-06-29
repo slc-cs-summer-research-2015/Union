@@ -17,7 +17,7 @@ public class FormatUnionClass {
 	public FormatUnionClass(Unions unions, String className) {
 		this.unions = unions;
 		this.fmt = new Formatter();
-		fmt.format(unions.importText);
+		fmt.format(unions.getImportText());
 		fmt.format("public class %s {\n%s\n}", className, formatUnion());
 	}
 	
@@ -55,28 +55,28 @@ public class FormatUnionClass {
 		Formatter f = new Formatter();
 		if (unions.hasVisitors()) {
 		for (Variant variant : unions.getVariants(union_name)) {
-			if (variant.args != null) {
+			if (variant.getArgs() != null) {
 				f.format(
 						"\tpublic static final class %s extends %s {\n%s\n\t\tpublic %s(%s) {\n%s\n\t\t}\n%s\n\t}\n",
-						variant.name, union_name, declearArgs(variant.args), variant.name, 
-						parenArgs(variant.args), setArgs(variant.args), FormatAcceptMethod(union_name));
+						variant.getName(), union_name, declearArgs(variant.getArgs()), variant.getName(), 
+						parenArgs(variant.getArgs()), setArgs(variant.getArgs()), FormatAcceptMethod(union_name));
 			} else {
 				f.format(
 						"\tpublic static final class %s extends %s {\n\t\tpublic %s() { }\n%s\t}\n",
-						variant.name, union_name, variant.name, FormatAcceptMethod(union_name));
+						variant.getName(), union_name, variant.getName(), FormatAcceptMethod(union_name));
 			}
 		}
 		} else {
 			for (Variant variant : unions.getVariants(union_name)) {
-				if (variant.args != null) {
+				if (variant.getArgs() != null) {
 					f.format(
 							"\tpublic static final class %s extends %s {\n%s\n\t\tpublic %s(%s) {\n%s\n\t\t}\n\t}\n",
-							variant.name, union_name, declearArgs(variant.args), variant.name, 
-							parenArgs(variant.args), setArgs(variant.args));
+							variant.getName(), union_name, declearArgs(variant.getArgs()), variant.getName(), 
+							parenArgs(variant.getArgs()), setArgs(variant.getArgs()));
 				} else {
 					f.format(
 							"\tpublic static final class %s extends %s {\n\t\tpublic %s() { }\n\t}\n",
-							variant.name, union_name, variant.name);
+							variant.getName(), union_name, variant.getName());
 				}
 			}
 		}

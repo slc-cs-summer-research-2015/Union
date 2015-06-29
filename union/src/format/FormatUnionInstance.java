@@ -21,7 +21,7 @@ public class FormatUnionInstance {
 		this.unions = unions;
 		
 		for (Traversal t : unions.getTraversals()) {
-			String className = Character.toUpperCase(t.name.charAt(0)) + t.name.substring(1) + unions.getName();
+			String className = Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) + unions.getName();
 			fmt.format("public class %s {\n%s}\n", className, formatTraversals(t));
 		}
 	}
@@ -30,7 +30,7 @@ public class FormatUnionInstance {
 		this.fmt = new Formatter();
 		this.unions = unions;
 		Traversal t = unions.getTraversal(traversal_name);
-		String className = Character.toUpperCase(t.name.charAt(0)) + t.name.substring(1) + unions.getName();
+		String className = Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) + unions.getName();
 		fmt.format("public class %s {\n%s}\n", className, formatTraversals(t));
 
 	}
@@ -39,7 +39,7 @@ public class FormatUnionInstance {
 	private String formatTraversals(Traversal t) {
 		Formatter f = new Formatter();
 		String methodName = "";
-		for (Type arg_type : t.arg_types) {
+		for (Type arg_type : t.getArg_types()) {
 			if (arg_type instanceof ObjectType) {
 				ObjectType ot = (ObjectType) arg_type;
 				methodName += ot.id;
@@ -47,25 +47,25 @@ public class FormatUnionInstance {
 				methodName += arg_type.toString();
 			}
 		}
-		methodName = t.name + methodName;
+		methodName = t.getName() + methodName;
 		f.format("\tpublic static %s %s(%s) {\n%s\n\t}\n",
-				t.return_type, methodName, parenArgs(t.args), formatAllVariantsOfArgs(t));
+				t.getReturn_type(), methodName, parenArgs(t.getArgs()), formatAllVariantsOfArgs(t));
 		return f.toString();
 	}
 
 	private String formatAllVariantsOfArgs(Traversal t) {
 		Formatter f = new Formatter();
 		int arg_index = 0;
-		for (Type arg_type : t.arg_types) {
+		for (Type arg_type : t.getArg_types()) {
 			if (unions.getNames().contains(arg_type.toString())) {
 				int i = 0;
 				for (Variant v : unions.getVariants(arg_type.toString())) {
 					if (i == 0) {
 						f.format("\t\tif (%s instanceof %s) {\n\t\t\t%s %s = (%s) %s; \n%s\t\t\t// TODO Auto-generated case match pattern\n\t\t} ", 
-								t.getParameterName(arg_index), v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), t.getParameterName(arg_index), formatReturn(t.return_type));
+								t.getParameterName(arg_index), v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), t.getParameterName(arg_index), formatReturn(t.getReturn_type()));
 					} else {
 						f.format("else if (%s instanceof %s) {\n\t\t\t%s %s = (%s) %s; \n%s\t\t\t// TODO Auto-generated case match pattern\n\t\t} ", 
-								t.getParameterName(arg_index), v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), t.getParameterName(arg_index), formatReturn(t.return_type));
+								t.getParameterName(arg_index), v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), t.getParameterName(arg_index), formatReturn(t.getReturn_type()));
 					}
 					i++;
 				}

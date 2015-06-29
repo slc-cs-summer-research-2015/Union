@@ -14,10 +14,10 @@ import ast.Type;
 public abstract class Ast {
 
 	public static final class Unions {
-		public Map<String, Set<Variant>> unions;
-		public List<Traversal> traversals;
-		public static boolean hasVisitors;
-		public String importText;
+		private Map<String, Set<Variant>> unions;
+		private List<Traversal> traversals;
+		private static boolean hasVisitors;
+		private String importText;
 		
 		public Unions(String importText, boolean hasVisitors, Map<String, Set<Variant>> unions, List<Traversal> traversals) {
 			Unions.hasVisitors = hasVisitors;
@@ -32,6 +32,10 @@ public abstract class Ast {
 		
 		public Set<Variant> getVariants(String union_name) {
 			return unions.get(union_name);
+		}
+		
+		public String getImportText() {
+			return importText;
 		}
 		
 		public List<Traversal> getTraversals() {
@@ -76,8 +80,8 @@ public abstract class Ast {
 	}
 
 	public static final class Variant implements Comparable<Variant> {
-		public String name;
-		public List<Pair<Type, String>> args;
+		private String name;
+		private List<Pair<Type, String>> args;
 	
 		public Variant(String name, List<Pair<Type, String>> args) {
 			this.name = name;
@@ -113,11 +117,11 @@ public abstract class Ast {
 	}
 	
 	public static final class Traversal {
-		public String name;
-		public Type return_type;
-		public List<Type> arg_types;
-		public List<Pair<Type, String>> args;
-		public List<String> arg_names;
+		private String name;
+		private Type return_type;
+		private List<Type> arg_types;
+		private List<Pair<Type, String>> args;
+		private List<String> arg_names;
 		
 		public Traversal(String name, Type return_type, List<Pair<Type, String>> args) {
 			this.name = name;
@@ -133,7 +137,27 @@ public abstract class Ast {
 			this.arg_names = arg_names;
 		}
 		
+		public Type getReturn_type() {
+			return return_type;
+		}
 		
+		
+		
+		public List<Pair<Type, String>> getArgs() {
+			return args;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public List<Type> getArg_types() {
+			return arg_types;
+		}
+		
+		public List<String> getArg_names() {
+			return arg_names;
+		}
 		
 		public String getParameterName(int arg_index) {
 			return arg_names.get(arg_index);
