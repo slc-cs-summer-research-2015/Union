@@ -15,28 +15,28 @@ import ast.Ast.*;
 public class FormatUnionInstance {
 	private Formatter fmt;
 	private Unions unions;
+
+//  loop through all the unions in the file
+//	public FormatUnionInstance(Unions unions) {
+//		this.fmt = new Formatter();
+//		this.unions = unions;
+//		
+//		for (Traversal t : unions.getTraversals()) {
+//			String className = Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) + unions.getName();
+//			fmt.format("public class %s {\n%s}\n", className, formatTraversals(t));
+//		}
+//	}
 	
-	public FormatUnionInstance(Unions unions) {
+	public FormatUnionInstance(Unions unions, Traversal t) {
 		this.fmt = new Formatter();
 		this.unions = unions;
-		
-		for (Traversal t : unions.getTraversals()) {
-			String className = Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) + unions.getName();
-			fmt.format("public class %s {\n%s}\n", className, formatTraversals(t));
-		}
-	}
-	
-	public FormatUnionInstance(Unions unions, String traversal_name) {
-		this.fmt = new Formatter();
-		this.unions = unions;
-		Traversal t = unions.getTraversal(traversal_name);
 		String className = Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) + unions.getName();
-		fmt.format("public class %s {\n%s}\n", className, formatTraversals(t));
+		fmt.format("public class %s {\n%s}\n", className, formatTraversal(t));
 
 	}
 	
 	
-	private String formatTraversals(Traversal t) {
+	private String formatTraversal(Traversal t) {
 		Formatter f = new Formatter();
 		String methodName = "";
 		for (Type arg_type : t.getArg_types()) {
@@ -49,11 +49,11 @@ public class FormatUnionInstance {
 		}
 		methodName = t.getName() + methodName;
 		f.format("\tpublic static %s %s(%s) {\n%s\n\t}\n",
-				t.getReturn_type(), methodName, parenArgs(t.getArgs()), formatAllVariantsOfArgs(t));
+				t.getReturn_type(), methodName, parenArgs(t.getArgs()), formatVariantOfArgs(t));
 		return f.toString();
 	}
 
-	private String formatAllVariantsOfArgs(Traversal t) {
+	private String formatVariantOfArgs(Traversal t) {
 		Formatter f = new Formatter();
 		int arg_index = 0;
 		for (Type arg_type : t.getArg_types()) {

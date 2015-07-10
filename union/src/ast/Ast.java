@@ -186,6 +186,17 @@ public abstract class Ast {
 			return arg_names.get(arg_index);
 		}
 		
+		public Type getUnionArg(Unions unions) {
+			for (String union_name : unions.getNames()) {
+				for (Type t : arg_types) {
+					if (t.toString().equals(union_name)) {
+						return t;
+					}
+				}
+			}
+			return null;
+		}
+		
 		public String toString() {
 			return name;
 		}
