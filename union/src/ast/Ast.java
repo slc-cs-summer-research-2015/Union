@@ -35,6 +35,9 @@ public abstract class Ast {
 		}
 		
 		public String getImportText() {
+			if (importText == null) {
+				return "";
+			}
 			return importText;
 		}
 		
@@ -69,14 +72,35 @@ public abstract class Ast {
 		
 		public String toString() {
 			return getName();
+			// implement printout of unions if needed in the future
+//			StringBuilder sb = new StringBuilder();
+//			if (importText != null) {
+//				sb.append("%prologue\n");
+//				sb.append(getImportText());
+//				sb.append("%prologue_end\n");
+//			}
+//			if (hasVisitors) {
+//				sb.append("%visitors\n");
+//			}
+//			for (String union_name : unions.keySet()) {
+//				sb.append("%union ");
+//				sb.append(union_name + " {\n");
+//				boolean first = true;
+//				for (Variant v : unions.get(union_name)) {
+//					if (first) {
+//						
+//						first = false;
+//					} else {
+//						
+//					}
+//				}
+//			}
+//			return sb.toString();
 		}
 		
 		public boolean hasVisitors() {
 			return hasVisitors;
 		}
-		
-
-		
 	}
 
 	public static final class Variant implements Comparable<Variant> {
@@ -119,8 +143,8 @@ public abstract class Ast {
 	public static final class Traversal {
 		private String name;
 		private Type return_type;
-		private List<Type> arg_types;
 		private List<Pair<Type, String>> args;
+		private List<Type> arg_types;
 		private List<String> arg_names;
 		
 		public Traversal(String name, Type return_type, List<Pair<Type, String>> args) {
@@ -137,11 +161,10 @@ public abstract class Ast {
 			this.arg_names = arg_names;
 		}
 		
+		
 		public Type getReturn_type() {
 			return return_type;
 		}
-		
-		
 		
 		public List<Pair<Type, String>> getArgs() {
 			return args;

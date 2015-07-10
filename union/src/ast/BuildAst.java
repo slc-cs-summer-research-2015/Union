@@ -37,8 +37,11 @@ public class BuildAst {
 	}
 
 	private static String convetPrologue(PrologueContext prologue) {
-		String p = prologue.getText();
-		return p.substring(9, p.length()-13);
+		if (prologue != null) {
+			String p = prologue.getText();
+			return p.substring(9, p.length() - 13);
+		}
+		return null;
 	}
 
 	private static List<Traversal> convertTraversals(TraversalsContext traversalsContext) {

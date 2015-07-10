@@ -9,7 +9,6 @@ import java.util.TreeMap;
 
 import org.antlr.v4.runtime.misc.Pair;
 
-import ast.Ast.Unions;
 import ast.Ast.Variant;
 import ast.Ast.*;
 
@@ -44,6 +43,7 @@ public class CompareAst {
 		public List<Variant> getTraversalInstaces(Traversal t, int mode) {
 			final int insert = 0;
 			final int delete = 1;
+			final int modified = 2;
 			List<Variant> traversalInstaces = new ArrayList<Variant>();
 
 			for (Type union_type : t.getArg_types()) {
@@ -53,13 +53,13 @@ public class CompareAst {
 					if (!beforeU.getNames().contains(union_type.toString())) {
 						// add this additional union with all the corresponding variants, but what if it's only renamed?
 					} else {
-						CompareVariants compareVariants = new CompareVariants(
-								afterU.getVariants(union_type.toString()),
-								beforeU.getVariants(union_type.toString()));
+						CompareVariants compareVariants = compareVariants_Unions.get(union_type.toString());
 						if (mode == insert) {
 							traversalInstaces = compareVariants.getInsertions();
 						} else if (mode == delete) {
 							traversalInstaces = compareVariants.getDeletions();
+						} else if (mode == modified) {
+							traversalInstaces.addAll(compareVariants.getModified());
 						}
 					}
 				}
@@ -67,8 +67,7 @@ public class CompareAst {
 			return traversalInstaces;
 		}
 		
-		public String getTraversalModifyMessage(Traversal t) {
-			StringBuilder message = new StringBuilder();
+		public String getTraversalModifyMessage(Traversal t, Variant v) {
 
 			for (Type union_type : t.getArg_types()) {
 				// pick the argument types that are union types
@@ -77,18 +76,22 @@ public class CompareAst {
 					if (!beforeU.getNames().contains(union_type.toString())) {
 						// add this additional union with all the corresponding variants, but what if it's only renamed?
 					} else {
-						CompareVariants compareVariants = new CompareVariants(
-								afterU.getVariants(union_type.toString()),
-								beforeU.getVariants(union_type.toString()));
-						for (Variant v : compareVariants.getPresent()) {
-							if (compareVariants.isVariantModified(v)) {
-								message.append(compareVariants.printoutModifyMessage(v));
-							}
-						}
+						CompareVariants compareVariants = compareVariants_Unions.get(union_type.toString());
+						return compareVariants.printoutModifyMessage(v);
 					}
 				}
 			}
-			return message.toString();
+			return null;
+		}
+		
+		public Pair<Type, String> getUnionTypeInTraversal(Traversal t) {
+			for (int i = 0; i < t.getArg_types().size(); i++) {
+				if (afterU.getNames().contains(t.getArg_types().get(i).toString())) {
+					return t.getArgs().get(i);
+				}
+			}
+			System.out.printf("Union type not found in Traversal %s\n", t.getName());
+			return null;
 		}
 	}
 
@@ -118,7 +121,9 @@ public class CompareAst {
 						if (beforeV.getName().equals(afterV.getName())) {
 							CompareArgs compareArgs = new CompareArgs();
 							compareArgs.addedArgs(afterV, beforeV);
-							compareArgs_Variants.put(afterV, compareArgs);
+							if (compareArgs.hasChanged()) {
+								compareArgs_Variants.put(afterV, compareArgs);
+							}
 						}
 					}
 				} else {
@@ -138,11 +143,15 @@ public class CompareAst {
 						if (compareArgs_Variants.containsKey(beforeV)) {
 							CompareArgs compareArgs = compareArgs_Variants.get(beforeV);
 							compareArgs.removedArgs(afterV, beforeV);
-							compareArgs_Variants.put(beforeV, compareArgs);
+							if (compareArgs.hasChanged()) {
+								compareArgs_Variants.put(beforeV, compareArgs);
+							}
 						} else {
 							CompareArgs compareArgs = new CompareArgs();
 							compareArgs.removedArgs(afterV, beforeV);
-							compareArgs_Variants.put(beforeV, compareArgs);
+							if (compareArgs.hasChanged()) {
+								compareArgs_Variants.put(beforeV, compareArgs);
+							}
 						}
 					}
 				}
@@ -159,6 +168,10 @@ public class CompareAst {
 
 		public List<Variant> getPresent() {
 			return present;
+		}
+		
+		public Set<Variant> getModified() {
+			return compareArgs_Variants.keySet();
 		}
 		
 		public boolean isVariantModified(Variant v) {
@@ -197,6 +210,14 @@ public class CompareAst {
 		public CompareArgs() {
 			this.insertions = null;
 			this.deletions = null;
+		}
+		
+		public boolean hasChanged() {
+			if (insertions != null || deletions != null) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 		private void addedArgs(Variant afterV, Variant beforeV) {
