@@ -67,8 +67,7 @@ public class CompareAst {
 			return traversalInstaces;
 		}
 		
-		public String getTraversalModifyMessage(Traversal t, Variant v) {
-
+		public String getVariantModifyMessage(Traversal t, Variant v) {
 			for (Type union_type : t.getArg_types()) {
 				// pick the argument types that are union types
 				if (afterU.getNames().contains(union_type.toString())) {
@@ -84,16 +83,35 @@ public class CompareAst {
 			return null;
 		}
 		
+		public String getVariantModifyMessage(String union_name, Variant v) {
+			CompareVariants compareVariants = compareVariants_Unions.get(union_name);
+			return compareVariants.printoutModifyMessage(v);
+
+		}
+		
 		public Pair<Type, String> getUnionTypeInTraversal(Traversal t) {
 			for (int i = 0; i < t.getArg_types().size(); i++) {
 				if (afterU.getNames().contains(t.getArg_types().get(i).toString())) {
+					// assuming that there will only be 1 argument that is union typed
 					return t.getArgs().get(i);
 				}
 			}
 			System.out.printf("Union type not found in Traversal %s\n", t.getName());
 			return null;
 		}
-	}
+
+	
+//	public List<Pair<Type, String>> getUnionTypeInTraversal(Traversal t) {
+//		List<Pair<Type, String>> union_types = new ArrayList<Pair<Type,String>>();
+//		for (int i = 0; i < t.getArg_types().size(); i++) {
+//			if (afterU.getNames().contains(t.getArg_types().get(i).toString())) {
+//				union_types.add(t.getArgs().get(i));
+//			}
+//		}
+//		//System.out.printf("Union type not found in Traversal %s\n", t.getName());
+//		return union_types;
+//	}
+}
 
 	
 	public static class CompareVariants {
@@ -176,7 +194,7 @@ public class CompareAst {
 		
 		public boolean isVariantModified(Variant v) {
 			if (compareArgs_Variants.containsKey(v)) {
-				return true;
+				return compareArgs_Variants.get(v).hasChanged();
 			} else {
 				return false;
 			}
@@ -186,11 +204,11 @@ public class CompareAst {
 			Formatter f = new Formatter();
 			if (isVariantModified(v)) {
 				CompareArgs compareArgs = compareArgs_Variants.get(v);
-				if (compareArgs.insertions != null) {
+				if (compareArgs.hasAdded()) {
 					f.format("//Argument %s was added in variant %s\n",
 							compareArgs.insertions.toString(), v.getName());
 				}
-				if (compareArgs.deletions != null) {
+				if (compareArgs.hasRemoved()) {
 					f.format("//Argument %s was removed in variant %s\n",
 							compareArgs.deletions.toString(), v.getName());
 				}
@@ -213,11 +231,28 @@ public class CompareAst {
 		}
 		
 		public boolean hasChanged() {
-			if (insertions != null || deletions != null) {
+			if (hasAdded() || hasRemoved()) {
 				return true;
-			} else {
-				return false;
 			}
+			return false;
+		}
+		
+		public boolean hasAdded() {
+			if (insertions != null) {
+				if (!insertions.isEmpty()) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		public boolean hasRemoved() {
+			if (deletions != null) {
+				if (!deletions.isEmpty()) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		private void addedArgs(Variant afterV, Variant beforeV) {
