@@ -4,6 +4,7 @@ import java.util.Formatter;
 
 import ast.Type;
 import ast.Ast.*;
+import ast.Type.BooleanType;
 import ast.Type.NumericType;
 
 public class FormatVisitorInterpreter {
@@ -11,24 +12,15 @@ public class FormatVisitorInterpreter {
 	private Unions unions;
 	private String className;
 	
-//  loop through all the unions in the file	
-//	public FormatVisitorInterpreter(Unions unions) {
-//		this.fmt = new Formatter();
-//		this.unions = unions;
-//		
-//		for (String union_name : unions.getNames()) {
-//			fmt.format("// TODO Auto-generated FormatVisitorInterpreter %s stub\n", union_name);
-//			fmt.format("public class %s implements %s {\n%s}\n", union_name+"Interpreter", union_name+"Visitor", formatVisitor(union_name));
-//		}
-//	}
 
 	public FormatVisitorInterpreter(Unions unions, String union_name, Type return_type) {
 		this.fmt = new Formatter();
 		this.unions = unions;
-		this.className = union_name+"Interpreter";
+		this.className = Character.toUpperCase(return_type.toString().charAt(0)) + return_type.toString().substring(1) + union_name + "Interpreter";
 
+		String interpreterClassName = Character.toUpperCase(return_type.toString().charAt(0)) + return_type.toString().substring(1) + union_name + "Visitor";
 		fmt.format("// TODO Auto-generated FormatVisitorInterface %s stub\n", union_name);
-		fmt.format("public class %s implements %s {\n%s}\n", className, union_name+"Visitor", formatVisitor(union_name, return_type));
+		fmt.format("public class %s implements %s {\n%s}\n", className, interpreterClassName, formatVisitor(union_name, return_type));
 
 	}
 	
@@ -46,6 +38,10 @@ public class FormatVisitorInterpreter {
 		} else if (return_type instanceof NumericType) {
 			Formatter f = new Formatter();
 			f.format("\t\treturn %s;\n", 0);
+			return f.toString();
+		} else if (return_type instanceof BooleanType) {
+			Formatter f = new Formatter();
+			f.format("\t\treturn %s;\n", "false");
 			return f.toString();
 		} else {
 			Formatter f = new Formatter();

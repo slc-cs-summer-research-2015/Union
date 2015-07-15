@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.antlr.v4.runtime.misc.Pair;
 
+import ast.Ast.Traversal;
 import ast.Ast.Unions;
 import ast.Ast.Variant;
 import ast.Type;
@@ -13,10 +14,12 @@ import ast.Type;
 public class FormatUnionClass {
 	private Formatter fmt;
 	private Unions unions;
+	private String className;
 	
 	public FormatUnionClass(Unions unions, String className) {
 		this.unions = unions;
 		this.fmt = new Formatter();
+		this.className = className;
 		fmt.format(unions.getImportText());
 		fmt.format("public class %s {\n%s\n}", className, formatUnion());
 	}
@@ -25,8 +28,7 @@ public class FormatUnionClass {
 		Formatter f = new Formatter();
 		if (unions.hasVisitors()) {
 			for (String union_name : unions.getNames()) {
-				f.format("\tpublic static abstract class %s {\n\t\tpublic abstract void accept(%sVisitor v);\n\t}\n", union_name, union_name);
-				//f.format("\tpublic static abstract class %s {\n%s\t}\n", union_name, formatAccept(union_name));
+				f.format("\tpublic static abstract class %s {\n%s\t}\n", union_name, formatAcceptAbsMethod(union_name));
 				f.format(formatVariants(union_name));
 			}
 		} else {
@@ -39,25 +41,13 @@ public class FormatUnionClass {
 		return f.toString();
 	}
 
-//	private String formatAccept(String union_name) {
-//		Formatter f = new Formatter();
-//		List<String> types = new ArrayList<String>();
-//		for (Type t : unions.getReturnTypes()) {
-//			if (!types.contains(t.toString())) {
-//				f.format("\t\tpublic abstract %s accept(%sVisitor v);\n", t, union_name);
-//				types.add(t.toString());
-//			}
-//		}
-//		return f.toString();
-//	}
-
 	private String formatVariants(String union_name) {
 		Formatter f = new Formatter();
 		if (unions.hasVisitors()) {
 		for (Variant variant : unions.getVariants(union_name)) {
 			if (variant.getArgs() != null) {
 				f.format(
-						"\tpublic static final class %s extends %s {\n%s\n\t\tpublic %s(%s) {\n%s\n\t\t}\n%s\n\t}\n",
+						"\tpublic static final class %s extends %s {\n%s\n\t\tpublic %s(%s) {\n%s\n\t\t}\n%s\t}\n",
 						variant.getName(), union_name, declearArgs(variant.getArgs()), variant.getName(), 
 						parenArgs(variant.getArgs()), setArgs(variant.getArgs()), FormatAcceptMethod(union_name));
 			} else {
@@ -83,10 +73,34 @@ public class FormatUnionClass {
 		return f.toString();
 	}
 	
+	private String formatAcceptAbsMethod(String union_name) {
+		Formatter f = new Formatter();
+		for (Traversal t : unions.getTraversals()) {
+			// check if this traversal takes this union in the parameter
+			if (t.getUnionArg(unions).toString().equals(union_name)) {
+				f.format("\t\tpublic abstract %s accept(%s v);\n", t.getReturn_type().toString(), getVisitorClassName(t.getReturn_type().toString(), union_name));
+			}
+		}
+		return f.toString();
+	}
+	
 	private String FormatAcceptMethod(String union_name) {
 		Formatter f = new Formatter();
-		f.format("\t\tpublic void accept(%sVisitor v) {\n\t\t\tv.visit(this);\n\t\t}", union_name);
+		for (Traversal t : unions.getTraversals()) {
+			// check if this traversal takes this union in the parameter
+			if (t.getUnionArg(unions).toString().equals(union_name)) {
+				if (t.getReturn_type().toString().equals("void")) {
+					f.format("\t\tpublic %s accept(%s v) {\n\t\t\tv.visit(this);\n\t\t}\n", t.getReturn_type().toString(), getVisitorClassName(t.getReturn_type().toString(), union_name));
+				} else {
+					f.format("\t\tpublic %s accept(%s v) {\n\t\t\treturn v.visit(this);\n\t\t}\n", t.getReturn_type().toString(), getVisitorClassName(t.getReturn_type().toString(), union_name));
+				}
+			}
+		}
 		return f.toString();
+	}
+	
+	private String getVisitorClassName(String return_type, String union_name) {
+		return Character.toUpperCase(return_type.charAt(0)) + return_type.substring(1) + union_name + "Visitor";
 	}
 
 	private String setArgs(List<Pair<Type, String>> args) {
@@ -118,6 +132,10 @@ public class FormatUnionClass {
 			f.format("\t\tpublic %s %s;\n", type, arg_name);
 		}
 		return f.toString();
+	}
+	
+	public String getClassName() {
+		return className;
 	}
 
 	public String toString() {

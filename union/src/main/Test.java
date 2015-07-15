@@ -31,7 +31,7 @@ public class Test {
         
         Unions unions = BuildAst.buildAst(programParseTree);
         
-        FormatVisitorTraversalMethod f = new FormatVisitorTraversalMethod(unions, unions.getTraversals().get(0), "ExpressionInterpreter");
+        FormatVisitorTraversalMethod f = new FormatVisitorTraversalMethod(unions, unions.getTraversals().get(0));
         
         //FormatUnionClass f = new FormatUnionClass(unions, "Union");
         

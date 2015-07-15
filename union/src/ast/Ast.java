@@ -194,7 +194,7 @@ public abstract class Ast {
 					}
 				}
 			}
-			return null;
+			throw new RuntimeException("Union type not found in the traversal input");
 		}
 		
 		public String toString() {

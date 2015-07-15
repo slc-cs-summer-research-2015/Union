@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.misc.Pair;
 
 import ast.Ast.Traversal;
 import ast.Type;
+import ast.Type.BooleanType;
 import ast.Type.NumericType;
 import ast.Type.ObjectType;
 import ast.Ast.*;
@@ -15,17 +16,6 @@ import ast.Ast.*;
 public class FormatUnionInstance {
 	private Formatter fmt;
 	private Unions unions;
-
-//  loop through all the unions in the file
-//	public FormatUnionInstance(Unions unions) {
-//		this.fmt = new Formatter();
-//		this.unions = unions;
-//		
-//		for (Traversal t : unions.getTraversals()) {
-//			String className = Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) + unions.getName();
-//			fmt.format("public class %s {\n%s}\n", className, formatTraversals(t));
-//		}
-//	}
 	
 	public FormatUnionInstance(Unions unions, Traversal t) {
 		this.fmt = new Formatter();
@@ -77,16 +67,20 @@ public class FormatUnionInstance {
 	}
 
 
-	private String formatReturn(Type arg_type) {
-		if (arg_type.toString().equals("void")) {
+	private String formatReturn(Type return_type) {
+		if (return_type.toString().equals("void")) {
 			return "";
-		} else if (arg_type instanceof NumericType) {
+		} else if (return_type instanceof NumericType) {
 			Formatter f = new Formatter();
-			f.format("\t\t\treturn %s;\n", 0);
+			f.format("\t\treturn %s;\n", 0);
+			return f.toString();
+		} else if (return_type instanceof BooleanType) {
+			Formatter f = new Formatter();
+			f.format("\t\treturn %s;\n", "false");
 			return f.toString();
 		} else {
 			Formatter f = new Formatter();
-			f.format("\t\t\treturn %s;\n", "null");
+			f.format("\t\treturn %s;\n", "null");
 			return f.toString();
 		}
 	}
