@@ -11,11 +11,11 @@ public class FormatVisitorInterface {
 	private String className;
 
 
-	public FormatVisitorInterface(Unions unions, String union_name, Type return_type) {
+	public FormatVisitorInterface(Unions unions, String union_name, Traversal t) {
 		this.fmt = new Formatter();
 		this.unions = unions;
-		this.className = Character.toUpperCase(return_type.toString().charAt(0)) + return_type.toString().substring(1) + union_name + "Visitor";
-		fmt.format("public interface %s {\n%s\n}", className, formatVisitor(union_name, return_type));
+		this.className = "I" + Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) +  union_name + "Visitor";
+		fmt.format("public interface %s {\n%s\n}", className, formatVisitor(union_name, t.getReturn_type()));
 	}
 	
 	

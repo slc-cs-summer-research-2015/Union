@@ -78,7 +78,7 @@ public class FormatUnionClass {
 		for (Traversal t : unions.getTraversals()) {
 			// check if this traversal takes this union in the parameter
 			if (t.getUnionArg(unions).toString().equals(union_name)) {
-				f.format("\t\tpublic abstract %s accept(%s v);\n", t.getReturn_type().toString(), getVisitorClassName(t.getReturn_type().toString(), union_name));
+				f.format("\t\tpublic abstract %s accept(%s v);\n", t.getReturn_type().toString(), getVisitorInterfaceName(t, union_name));
 			}
 		}
 		return f.toString();
@@ -90,17 +90,17 @@ public class FormatUnionClass {
 			// check if this traversal takes this union in the parameter
 			if (t.getUnionArg(unions).toString().equals(union_name)) {
 				if (t.getReturn_type().toString().equals("void")) {
-					f.format("\t\tpublic %s accept(%s v) {\n\t\t\tv.visit(this);\n\t\t}\n", t.getReturn_type().toString(), getVisitorClassName(t.getReturn_type().toString(), union_name));
+					f.format("\t\tpublic %s accept(%s v) {\n\t\t\tv.visit(this);\n\t\t}\n", t.getReturn_type().toString(), getVisitorInterfaceName(t, union_name));
 				} else {
-					f.format("\t\tpublic %s accept(%s v) {\n\t\t\treturn v.visit(this);\n\t\t}\n", t.getReturn_type().toString(), getVisitorClassName(t.getReturn_type().toString(), union_name));
+					f.format("\t\tpublic %s accept(%s v) {\n\t\t\treturn v.visit(this);\n\t\t}\n", t.getReturn_type().toString(), getVisitorInterfaceName(t, union_name));
 				}
 			}
 		}
 		return f.toString();
 	}
 	
-	private String getVisitorClassName(String return_type, String union_name) {
-		return Character.toUpperCase(return_type.charAt(0)) + return_type.substring(1) + union_name + "Visitor";
+	private String getVisitorInterfaceName(Traversal t, String union_name) {
+		return "I" + Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) +  union_name + "Visitor";
 	}
 
 	private String setArgs(List<Pair<Type, String>> args) {

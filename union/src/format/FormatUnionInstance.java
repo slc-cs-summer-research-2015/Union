@@ -16,11 +16,12 @@ import ast.Ast.*;
 public class FormatUnionInstance {
 	private Formatter fmt;
 	private Unions unions;
+	private String className;
 	
 	public FormatUnionInstance(Unions unions, Traversal t) {
 		this.fmt = new Formatter();
 		this.unions = unions;
-		String className = Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) + unions.getName();
+		this.className = Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) + unions.getName();
 		fmt.format("public class %s {\n%s}\n", className, formatTraversal(t));
 
 	}
@@ -94,6 +95,10 @@ public class FormatUnionInstance {
 		}
 		String str = f.toString();
 		return str.substring(0, str.length()-2);
+	}
+	
+	public String getClassName() {
+		return className;
 	}
 	
 	public String toString() {

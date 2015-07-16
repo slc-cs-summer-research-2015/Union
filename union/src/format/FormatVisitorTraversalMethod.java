@@ -65,7 +65,7 @@ public class FormatVisitorTraversalMethod {
 	}
 	
 	private String getInterpreterClassName(String return_type, String union_name) {
-		return Character.toUpperCase(return_type.charAt(0)) + return_type.substring(1) + union_name + "Interpreter";
+		return Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) + union_name + "Visitor";
 	}
 
 	private String parenArgs(List<Pair<Type, String>> args) {
