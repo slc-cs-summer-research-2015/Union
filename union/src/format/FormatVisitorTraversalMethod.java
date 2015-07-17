@@ -22,7 +22,7 @@ public class FormatVisitorTraversalMethod {
 		this.fmt = new Formatter();
 		this.unions = unions;
 		this.t = t;
-		this.className = Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) + unions.getName();
+		this.className = Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) + t.getUnionArg(unions);
 		fmt.format("public class %s {\n%s}\n", className, formatTraversal());
 
 	}
@@ -39,8 +39,8 @@ public class FormatVisitorTraversalMethod {
 			}
 		}
 		methodName = t.getName() + methodName;
-		f.format("\tpublic static %s %s(%s) {\n%s\n\t}\n",
-				t.getReturn_type(), methodName, parenArgs(t.getArgs()), formatVariantOfArgs());
+		f.format("\tpublic static %s %s(%s) {\n\t\t// TODO Auto-generated %s stub\n%s\n\t}\n",
+				t.getReturn_type(), methodName, parenArgs(t.getArgs()), className, formatVariantOfArgs());
 		return f.toString();
 	}
 	

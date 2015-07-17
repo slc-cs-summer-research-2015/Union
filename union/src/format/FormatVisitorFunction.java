@@ -19,8 +19,7 @@ public class FormatVisitorFunction {
 		//this.className = Character.toUpperCase(return_type.toString().charAt(0)) + return_type.toString().substring(1) + union_name + "Interpreter";
 		this.className = Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) + union_name + "Visitor";
 		//String interpreterClassName = Character.toUpperCase(t.getReturn_type().toString().charAt(0)) + t.getReturn_type().toString().substring(1) + union_name + "Visitor";
-		String interpreterClassName = "I" + Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) + union_name + "Visitor";
-		fmt.format("// TODO Auto-generated %s stub\n", className);
+		String interpreterClassName = "I" + Character.toUpperCase(t.getReturn_type().toString().charAt(0)) +t.getReturn_type().toString().substring(1) +  union_name + "Visitor";
 		fmt.format("public class %s implements %s {\n%s}\n", className, interpreterClassName, formatVisitor(union_name, t.getReturn_type()));
 
 	}
@@ -28,7 +27,7 @@ public class FormatVisitorFunction {
 	private String formatVisitor(String union_name, Type return_type) {
 		Formatter f = new Formatter();
 		for (Variant v : unions.getVariants(union_name)) {
-			f.format("\tpublic %s visit(%s %s) {\n%s\t}\n", return_type.toString(), v.getName(), v.getName().toLowerCase(), formatReturn(return_type));
+			f.format("\tpublic %s visit(%s %s) {\n\t\t// TODO Auto-generated %s stub\n\t%s\t}\n", return_type.toString(), v.getName(), v.getName().toLowerCase(), className, formatReturn(return_type));
 		}
 		return f.toString();
 	}

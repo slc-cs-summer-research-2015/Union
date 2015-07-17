@@ -75,10 +75,15 @@ public class FormatUnionClass {
 	
 	private String formatAcceptAbsMethod(String union_name) {
 		Formatter f = new Formatter();
+		List<String> traversal_returnTypes = new ArrayList<String>();
 		for (Traversal t : unions.getTraversals()) {
 			// check if this traversal takes this union in the parameter
 			if (t.getUnionArg(unions).toString().equals(union_name)) {
-				f.format("\t\tpublic abstract %s accept(%s v);\n", t.getReturn_type().toString(), getVisitorInterfaceName(t, union_name));
+				// check if accept type of this traversal & union is already created
+				if (!traversal_returnTypes.contains(t.getReturn_type().toString())) {
+					f.format("\t\tpublic abstract %s accept(%s v);\n", t.getReturn_type().toString(), getVisitorInterfaceName(t, union_name));
+				}
+				traversal_returnTypes.add(t.getReturn_type().toString());
 			}
 		}
 		return f.toString();
@@ -86,21 +91,26 @@ public class FormatUnionClass {
 	
 	private String FormatAcceptMethod(String union_name) {
 		Formatter f = new Formatter();
+		List<String> traversal_returnTypes = new ArrayList<String>();
 		for (Traversal t : unions.getTraversals()) {
 			// check if this traversal takes this union in the parameter
 			if (t.getUnionArg(unions).toString().equals(union_name)) {
-				if (t.getReturn_type().toString().equals("void")) {
-					f.format("\t\tpublic %s accept(%s v) {\n\t\t\tv.visit(this);\n\t\t}\n", t.getReturn_type().toString(), getVisitorInterfaceName(t, union_name));
-				} else {
-					f.format("\t\tpublic %s accept(%s v) {\n\t\t\treturn v.visit(this);\n\t\t}\n", t.getReturn_type().toString(), getVisitorInterfaceName(t, union_name));
+				// check if accept type of this traversal & union is already created
+				if (!traversal_returnTypes.contains(t.getReturn_type().toString())) {
+					if (t.getReturn_type().toString().equals("void")) {
+						f.format("\t\tpublic %s accept(%s v) {\n\t\t\tv.visit(this);\n\t\t}\n", t.getReturn_type().toString(), getVisitorInterfaceName(t, union_name));
+					} else {
+						f.format("\t\tpublic %s accept(%s v) {\n\t\t\treturn v.visit(this);\n\t\t}\n", t.getReturn_type().toString(), getVisitorInterfaceName(t, union_name));
+					}
 				}
+				traversal_returnTypes.add(t.getReturn_type().toString());
 			}
 		}
 		return f.toString();
 	}
 	
 	private String getVisitorInterfaceName(Traversal t, String union_name) {
-		return "I" + Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) +  union_name + "Visitor";
+		return "I" + Character.toUpperCase(t.getReturn_type().toString().charAt(0)) +t.getReturn_type().toString().substring(1) +  union_name + "Visitor";
 	}
 
 	private String setArgs(List<Pair<Type, String>> args) {
