@@ -21,11 +21,9 @@ public class FormatUnionInstance {
 	public FormatUnionInstance(Unions unions, Traversal t) {
 		this.fmt = new Formatter();
 		this.unions = unions;
-		this.className = Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) + unions.getName();
+		this.className = Character.toUpperCase(t.getName().charAt(0)) + t.getName().substring(1) + t.getUnionArg(unions);
 		fmt.format("public class %s {\n%s}\n", className, formatTraversal(t));
-
 	}
-	
 	
 	private String formatTraversal(Traversal t) {
 		Formatter f = new Formatter();
@@ -52,10 +50,10 @@ public class FormatUnionInstance {
 				int i = 0;
 				for (Variant v : unions.getVariants(arg_type.toString())) {
 					if (i == 0) {
-						f.format("\t\tif (%s instanceof %s) {\n\t\t\t%s %s = (%s) %s; \n%s\t\t\t// TODO Auto-generated case match pattern\n\t\t} ", 
+						f.format("\t\tif (%s instanceof %s) {\n\t\t\t// TODO Auto-generated case match pattern\n\t\t\t%s %s = (%s) %s; \n%s\t\t} ", 
 								t.getParameterName(arg_index), v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), t.getParameterName(arg_index), formatReturn(t.getReturn_type()));
 					} else {
-						f.format("else if (%s instanceof %s) {\n\t\t\t%s %s = (%s) %s; \n%s\t\t\t// TODO Auto-generated case match pattern\n\t\t} ", 
+						f.format("else if (%s instanceof %s) {\n\t\t\t// TODO Auto-generated case match pattern\n\t\t\t%s %s = (%s) %s; \n%s\t\t} ", 
 								t.getParameterName(arg_index), v.getName(), v.getName(), v.getName().toLowerCase(), v.getName(), t.getParameterName(arg_index), formatReturn(t.getReturn_type()));
 					}
 					i++;
@@ -73,15 +71,15 @@ public class FormatUnionInstance {
 			return "";
 		} else if (return_type instanceof NumericType) {
 			Formatter f = new Formatter();
-			f.format("\t\treturn %s;\n", 0);
+			f.format("\t\t\treturn %s;\n", 0);
 			return f.toString();
 		} else if (return_type instanceof BooleanType) {
 			Formatter f = new Formatter();
-			f.format("\t\treturn %s;\n", "false");
+			f.format("\t\t\treturn %s;\n", "false");
 			return f.toString();
 		} else {
 			Formatter f = new Formatter();
-			f.format("\t\treturn %s;\n", "null");
+			f.format("\t\t\treturn %s;\n", "null");
 			return f.toString();
 		}
 	}
