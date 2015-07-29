@@ -39,8 +39,8 @@ public class FormatVisitorTraversalMethod {
 			}
 		}
 		methodName = t.getName() + methodName;
-		f.format("\tpublic static %s %s(%s) {\n\t\t// TODO Auto-generated %s stub\n%s\n\t}\n",
-				t.getReturn_type(), methodName, parenArgs(t.getArgs()), className, formatVariantOfArgs());
+		f.format("\tpublic static %s %s(%s) {\n%s\n\t}\n",
+				t.getReturn_type(), methodName, parenArgs(t.getArgs()), formatVariantOfArgs());
 		return f.toString();
 	}
 	

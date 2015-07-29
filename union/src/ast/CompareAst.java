@@ -9,6 +9,7 @@ import java.util.TreeMap;
 
 import org.antlr.v4.runtime.misc.Pair;
 
+import ast.Ast.Traversal;
 import ast.Ast.Variant;
 import ast.Ast.*;
 
@@ -30,7 +31,7 @@ public class CompareAst {
 			Map<String, CompareVariants> compareVariants_Unions = new TreeMap<String, CompareVariants>();
 			for (String union_name : afterU.getNames()) {
 				if (beforeU.getVariants(union_name) == null) {
-					// a union is added
+					// an union is added
 				} else {
 					CompareVariants compareVariants = new CompareVariants(
 							afterU.getVariants(union_name), beforeU.getVariants(union_name));
@@ -40,6 +41,7 @@ public class CompareAst {
 			return compareVariants_Unions;
 		}
 		
+		// for instanceof mode
 		public List<Variant> getTraversalInstaces(Traversal t, int mode) {
 			final int insert = 0;
 			final int delete = 1;
@@ -67,20 +69,10 @@ public class CompareAst {
 			return traversalInstaces;
 		}
 		
+		// get the message describing argument change
 		public String getVariantModifyMessage(Traversal t, Variant v) {
-			for (Type union_type : t.getArg_types()) {
-				// pick the argument types that are union types
-				if (afterU.getNames().contains(union_type.toString())) {
-					// found additional union types
-					if (!beforeU.getNames().contains(union_type.toString())) {
-						// add this additional union with all the corresponding variants, but what if it's only renamed?
-					} else {
-						CompareVariants compareVariants = compareVariants_Unions.get(union_type.toString());
-						return compareVariants.printoutModifyMessage(v);
-					}
-				}
-			}
-			return null;
+			CompareVariants compareVariants = compareVariants_Unions.get(t.getUnionArg(afterU).toString());
+			return compareVariants.printoutModifyMessage(v);
 		}
 		
 		public String getVariantModifyMessage(String union_name, Variant v) {
@@ -89,28 +81,29 @@ public class CompareAst {
 
 		}
 		
+		// get the union that the traversal takes
 		public Pair<Type, String> getUnionTypeInTraversal(Traversal t) {
 			for (int i = 0; i < t.getArg_types().size(); i++) {
 				if (afterU.getNames().contains(t.getArg_types().get(i).toString())) {
-					// assuming that there will only be 1 argument that is union typed
+					// there will only be 1 argument that is union typed
 					return t.getArgs().get(i);
 				}
 			}
 			System.out.printf("Union type not found in Traversal %s\n", t.getName());
 			return null;
 		}
+		
+		// for VisitorTraversalMethod
+		public Type getReturnTypeChangeInTraversal(Traversal t) {
+			Traversal before = beforeU.getTraversal(t.getName());
+			if (before.getReturn_type() != t.getReturn_type()) {
+				return t.getReturn_type();
+			} else {
+				return null;
+			}
+		}
 
 	
-//	public List<Pair<Type, String>> getUnionTypeInTraversal(Traversal t) {
-//		List<Pair<Type, String>> union_types = new ArrayList<Pair<Type,String>>();
-//		for (int i = 0; i < t.getArg_types().size(); i++) {
-//			if (afterU.getNames().contains(t.getArg_types().get(i).toString())) {
-//				union_types.add(t.getArgs().get(i));
-//			}
-//		}
-//		//System.out.printf("Union type not found in Traversal %s\n", t.getName());
-//		return union_types;
-//	}
 }
 
 	
