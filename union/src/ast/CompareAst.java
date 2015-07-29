@@ -89,7 +89,7 @@ public class CompareAst {
 					return t.getArgs().get(i);
 				}
 			}
-			System.out.printf("Union type not found in Traversal %s\n", t.getName());
+			//System.out.printf("Union type not found in Traversal %s\n", t.getName());
 			return null;
 		}
 		
@@ -125,7 +125,7 @@ public class CompareAst {
 		private void compareVariants(Set<Variant> afterVs, Set<Variant> beforeVs) {
 			for (Variant afterV : afterVs) {
 				if (beforeVs.contains(afterV)) {
-					System.out.printf("Variant %s was present in the previous edit\n", afterV.getName());
+					//System.out.printf("Variant %s was present in the previous edit\n", afterV.getName());
 					present.add(afterV);
 					// compare args
 					for (Variant beforeV : beforeVs) {
@@ -138,14 +138,14 @@ public class CompareAst {
 						}
 					}
 				} else {
-					System.out.printf("Variant %s was added\n", afterV.getName());
+					//System.out.printf("Variant %s was added\n", afterV.getName());
 					insertions.add(afterV);
 				}
 			}
 			// check if variants were removed
 			for (Variant beforeV : beforeVs) {
 				if (!afterVs.contains(beforeV)) {
-					System.out.printf("Variant %s was removed\n", beforeV.getName());
+					//System.out.printf("Variant %s was removed\n", beforeV.getName());
 					deletions.add(beforeV);
 				}
 				// compare args
